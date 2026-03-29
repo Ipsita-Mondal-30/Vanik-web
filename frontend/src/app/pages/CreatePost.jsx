@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, FileText } from "lucide-react";
 function CreatePost() {
   const navigate = useNavigate();
   const { user, t } = useApp();
@@ -31,14 +31,14 @@ function CreatePost() {
       ...formData,
       farmerId: user.id,
       farmerName: user.name,
-      createdAt: (/* @__PURE__ */ new Date()).toISOString()
+      createdAt: (new Date()).toISOString()
     };
     posts.push(newPost);
     localStorage.setItem("vanik_posts", JSON.stringify(posts));
     navigate("/my-posts");
   };
-  return /* @__PURE__ */ jsx("div", { className: "min-h-[calc(100vh-5rem)] bg-gradient-to-b from-background to-muted/30 py-8 sm:py-12 px-4", children: /* @__PURE__ */ jsxs("div", { className: "max-w-2xl mx-auto", children: [
-    /* @__PURE__ */ jsxs(
+  return jsx("div", { className: "min-h-[calc(100vh-5rem)] bg-gradient-to-b from-background to-muted/30 py-8 sm:py-12 px-4", children: jsxs("div", { className: "max-w-2xl mx-auto", children: [
+    jsxs(
       Button,
       {
         variant: "ghost",
@@ -46,26 +46,26 @@ function CreatePost() {
         onClick: () => navigate("/dashboard"),
         className: "mb-4 sm:mb-6",
         children: [
-          /* @__PURE__ */ jsx(ArrowLeft, { className: "w-4 h-4 mr-2" }),
+          jsx(ArrowLeft, { className: "w-4 h-4 mr-2" }),
           t("common.back")
         ]
       }
     ),
-    /* @__PURE__ */ jsx(Card, { className: "shadow-xl", children: /* @__PURE__ */ jsxs(CardContent, { className: "p-6 sm:p-8", children: [
-      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8", children: [
-        /* @__PURE__ */ jsx("div", { className: "text-4xl sm:text-5xl", children: "\u{1F4DD}" }),
-        /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsx("h1", { className: "text-2xl sm:text-3xl font-bold", children: t("dashboard.createPost") }),
-          /* @__PURE__ */ jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Post your crop or requirement" })
+    jsx(Card, { className: "shadow-xl", children: jsxs(CardContent, { className: "p-6 sm:p-8", children: [
+      jsxs("div", { className: "flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8", children: [
+        jsx("div", { className: "bg-primary/10 rounded-full p-3 flex items-center justify-center", children: jsx(FileText, { className: "w-8 h-8 sm:w-10 sm:h-10 text-primary" }) }),
+        jsxs("div", { children: [
+          jsx("h1", { className: "text-2xl sm:text-3xl font-bold", children: t("dashboard.createPost") }),
+          jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Post your crop or requirement" })
         ] })
       ] }),
-      /* @__PURE__ */ jsxs("form", { onSubmit: handleSubmit, className: "space-y-5 sm:space-y-6", children: [
-        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-          /* @__PURE__ */ jsxs(Label, { htmlFor: "title", className: "text-base sm:text-lg", children: [
+      jsxs("form", { onSubmit: handleSubmit, className: "space-y-5 sm:space-y-6", children: [
+        jsxs("div", { className: "space-y-2", children: [
+          jsxs(Label, { htmlFor: "title", className: "text-base sm:text-lg", children: [
             t("post.title"),
             " *"
           ] }),
-          /* @__PURE__ */ jsx(
+          jsx(
             Input,
             {
               id: "title",
@@ -78,12 +78,12 @@ function CreatePost() {
             }
           )
         ] }),
-        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-          /* @__PURE__ */ jsxs(Label, { htmlFor: "description", className: "text-base sm:text-lg", children: [
+        jsxs("div", { className: "space-y-2", children: [
+          jsxs(Label, { htmlFor: "description", className: "text-base sm:text-lg", children: [
             t("post.description"),
             " *"
           ] }),
-          /* @__PURE__ */ jsx(
+          jsx(
             Textarea,
             {
               id: "description",
@@ -96,12 +96,12 @@ function CreatePost() {
             }
           )
         ] }),
-        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-          /* @__PURE__ */ jsxs(Label, { htmlFor: "price", className: "text-base sm:text-lg", children: [
+        jsxs("div", { className: "space-y-2", children: [
+          jsxs(Label, { htmlFor: "price", className: "text-base sm:text-lg", children: [
             t("post.price"),
             " (\u20B9) - Optional"
           ] }),
-          /* @__PURE__ */ jsx(
+          jsx(
             Input,
             {
               id: "price",
@@ -112,9 +112,9 @@ function CreatePost() {
               className: "h-12 sm:h-14 text-base sm:text-lg"
             }
           ),
-          /* @__PURE__ */ jsx("p", { className: "text-xs sm:text-sm text-muted-foreground", children: "Leave empty if you want buyers to bid" })
+          jsx("p", { className: "text-xs sm:text-sm text-muted-foreground", children: "Leave empty if you want buyers to bid" })
         ] }),
-        /* @__PURE__ */ jsx(
+        jsx(
           Button,
           {
             type: "submit",

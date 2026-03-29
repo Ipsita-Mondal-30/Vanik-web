@@ -7,7 +7,7 @@ function Menubar({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     MenubarPrimitive.Root,
     {
       "data-slot": "menubar",
@@ -22,28 +22,28 @@ function Menubar({
 function MenubarMenu({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(MenubarPrimitive.Menu, { "data-slot": "menubar-menu", ...props });
+  return jsx(MenubarPrimitive.Menu, { "data-slot": "menubar-menu", ...props });
 }
 function MenubarGroup({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(MenubarPrimitive.Group, { "data-slot": "menubar-group", ...props });
+  return jsx(MenubarPrimitive.Group, { "data-slot": "menubar-group", ...props });
 }
 function MenubarPortal({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(MenubarPrimitive.Portal, { "data-slot": "menubar-portal", ...props });
+  return jsx(MenubarPrimitive.Portal, { "data-slot": "menubar-portal", ...props });
 }
 function MenubarRadioGroup({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(MenubarPrimitive.RadioGroup, { "data-slot": "menubar-radio-group", ...props });
+  return jsx(MenubarPrimitive.RadioGroup, { "data-slot": "menubar-radio-group", ...props });
 }
 function MenubarTrigger({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     MenubarPrimitive.Trigger,
     {
       "data-slot": "menubar-trigger",
@@ -62,7 +62,7 @@ function MenubarContent({
   sideOffset = 8,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(MenubarPortal, { children: /* @__PURE__ */ jsx(
+  return jsx(MenubarPortal, { children: jsx(
     MenubarPrimitive.Content,
     {
       "data-slot": "menubar-content",
@@ -83,7 +83,7 @@ function MenubarItem({
   variant = "default",
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     MenubarPrimitive.Item,
     {
       "data-slot": "menubar-item",
@@ -103,7 +103,7 @@ function MenubarCheckboxItem({
   checked,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     MenubarPrimitive.CheckboxItem,
     {
       "data-slot": "menubar-checkbox-item",
@@ -114,7 +114,7 @@ function MenubarCheckboxItem({
       checked,
       ...props,
       children: [
-        /* @__PURE__ */ jsx("span", { className: "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center", children: /* @__PURE__ */ jsx(MenubarPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx(CheckIcon, { className: "size-4" }) }) }),
+        jsx("span", { className: "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center", children: jsx(MenubarPrimitive.ItemIndicator, { children: jsx(CheckIcon, { className: "size-4" }) }) }),
         children
       ]
     }
@@ -125,7 +125,7 @@ function MenubarRadioItem({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     MenubarPrimitive.RadioItem,
     {
       "data-slot": "menubar-radio-item",
@@ -135,7 +135,7 @@ function MenubarRadioItem({
       ),
       ...props,
       children: [
-        /* @__PURE__ */ jsx("span", { className: "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center", children: /* @__PURE__ */ jsx(MenubarPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx(CircleIcon, { className: "size-2 fill-current" }) }) }),
+        jsx("span", { className: "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center", children: jsx(MenubarPrimitive.ItemIndicator, { children: jsx(CircleIcon, { className: "size-2 fill-current" }) }) }),
         children
       ]
     }
@@ -146,7 +146,7 @@ function MenubarLabel({
   inset,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     MenubarPrimitive.Label,
     {
       "data-slot": "menubar-label",
@@ -163,7 +163,7 @@ function MenubarSeparator({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     MenubarPrimitive.Separator,
     {
       "data-slot": "menubar-separator",
@@ -176,7 +176,7 @@ function MenubarShortcut({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "span",
     {
       "data-slot": "menubar-shortcut",
@@ -191,7 +191,7 @@ function MenubarShortcut({
 function MenubarSub({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(MenubarPrimitive.Sub, { "data-slot": "menubar-sub", ...props });
+  return jsx(MenubarPrimitive.Sub, { "data-slot": "menubar-sub", ...props });
 }
 function MenubarSubTrigger({
   className,
@@ -199,7 +199,7 @@ function MenubarSubTrigger({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     MenubarPrimitive.SubTrigger,
     {
       "data-slot": "menubar-sub-trigger",
@@ -211,7 +211,7 @@ function MenubarSubTrigger({
       ...props,
       children: [
         children,
-        /* @__PURE__ */ jsx(ChevronRightIcon, { className: "ml-auto h-4 w-4" })
+        jsx(ChevronRightIcon, { className: "ml-auto h-4 w-4" })
       ]
     }
   );
@@ -220,7 +220,7 @@ function MenubarSubContent({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     MenubarPrimitive.SubContent,
     {
       "data-slot": "menubar-sub-content",

@@ -7,7 +7,7 @@ function Checkbox({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     CheckboxPrimitive.Root,
     {
       "data-slot": "checkbox",
@@ -16,12 +16,12 @@ function Checkbox({
         className
       ),
       ...props,
-      children: /* @__PURE__ */ jsx(
+      children: jsx(
         CheckboxPrimitive.Indicator,
         {
           "data-slot": "checkbox-indicator",
           className: "flex items-center justify-center text-current transition-none",
-          children: /* @__PURE__ */ jsx(CheckIcon, { className: "size-3.5" })
+          children: jsx(CheckIcon, { className: "size-3.5" })
         }
       )
     }

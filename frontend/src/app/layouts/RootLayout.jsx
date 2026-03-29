@@ -7,9 +7,9 @@ function RootLayout() {
   useEffect(() => {
     seedMockData();
   }, []);
-  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-background", children: [
-    /* @__PURE__ */ jsx(Navbar, {}),
-    /* @__PURE__ */ jsx(Outlet, {})
+  return jsxs("div", { className: "min-h-screen bg-background", children: [
+    jsx(Navbar, {}),
+    jsx(Outlet, {})
   ] });
 }
 export {

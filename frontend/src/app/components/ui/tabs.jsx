@@ -6,7 +6,7 @@ function Tabs({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     TabsPrimitive.Root,
     {
       "data-slot": "tabs",
@@ -19,7 +19,7 @@ function TabsList({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     TabsPrimitive.List,
     {
       "data-slot": "tabs-list",
@@ -35,7 +35,7 @@ function TabsTrigger({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     TabsPrimitive.Trigger,
     {
       "data-slot": "tabs-trigger",
@@ -51,7 +51,7 @@ function TabsContent({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     TabsPrimitive.Content,
     {
       "data-slot": "tabs-content",

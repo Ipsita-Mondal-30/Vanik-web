@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { toast } from "sonner";
-import { Loader2, ArrowLeft, Send } from "lucide-react";
+import { Loader2, ArrowLeft, Send, MessageCircle, Sprout, ShoppingBag } from "lucide-react";
 import { useApp } from "../contexts/AppContext";
 import api from "../api";
 import { Button } from "../components/ui/button";
@@ -150,8 +150,12 @@ export function Chat() {
         <Card className="flex-1 flex flex-col shadow-xl overflow-hidden">
           <div className="bg-primary/5 p-4 sm:p-6 border-b">
             <div className="flex items-center gap-3">
-              <div className="text-3xl sm:text-4xl">
-                {otherUser?.role === "buyer" ? "\u{1F477}" : "\u{1F468}\u200D\u{1F33E}"}
+              <div className="bg-muted rounded-full p-2.5 flex items-center justify-center">
+                {otherUser?.role === "buyer" ? (
+                  <ShoppingBag className="w-7 h-7 sm:w-8 sm:h-8 text-secondary" />
+                ) : (
+                  <Sprout className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
+                )}
               </div>
               <div>
                 <h2 className="text-lg sm:text-xl font-bold">
@@ -173,7 +177,7 @@ export function Chat() {
             )}
             {messages.length === 0 && !loadingList ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
-                <div className="text-4xl sm:text-5xl mb-4">{"\u{1F4AC}"}</div>
+                <MessageCircle className="w-14 h-14 sm:w-16 sm:h-16 text-muted-foreground mb-4" />
                 <p className="text-sm sm:text-base text-muted-foreground">
                   Start the conversation
                 </p>

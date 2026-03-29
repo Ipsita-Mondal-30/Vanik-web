@@ -2,7 +2,7 @@ import { jsx, jsxs } from "react/jsx-runtime";
 import { useNavigate } from "react-router";
 import { useApp } from "../contexts/AppContext";
 import { Card, CardContent } from "../components/ui/card";
-import { PlusCircle, FileText, Gavel, ShoppingBag, MessageSquare } from "lucide-react";
+import { PlusCircle, FileText, Gavel, ShoppingBag, MessageSquare, Sprout } from "lucide-react";
 import { useEffect, useState } from "react";
 function Dashboard() {
   const navigate = useNavigate();
@@ -92,47 +92,47 @@ function Dashboard() {
     }
   ];
   const actions = user.role === "farmer" ? farmerActions : buyerActions;
-  return /* @__PURE__ */ jsx("div", { className: "min-h-[calc(100vh-5rem)] bg-gradient-to-b from-background to-muted/30 py-8 sm:py-12 px-4", children: /* @__PURE__ */ jsxs("div", { className: "max-w-4xl mx-auto", children: [
-    /* @__PURE__ */ jsx("div", { className: "mb-8 sm:mb-12", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4", children: [
-      /* @__PURE__ */ jsx("div", { className: "text-5xl sm:text-6xl", children: user.role === "farmer" ? "\u{1F468}\u200D\u{1F33E}" : "\u{1F477}" }),
-      /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsxs("h1", { className: "text-2xl sm:text-3xl font-bold", children: [
+  return jsx("div", { className: "min-h-[calc(100vh-5rem)] bg-gradient-to-b from-background to-muted/30 py-8 sm:py-12 px-4", children: jsxs("div", { className: "max-w-4xl mx-auto", children: [
+    jsx("div", { className: "mb-8 sm:mb-12", children: jsxs("div", { className: "flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4", children: [
+      jsx("div", { className: "bg-primary/10 rounded-full p-3 sm:p-4 flex items-center justify-center", children: user.role === "farmer" ? jsx(Sprout, { className: "w-10 h-10 sm:w-12 sm:h-12 text-primary" }) : jsx(ShoppingBag, { className: "w-10 h-10 sm:w-12 sm:h-12 text-secondary" }) }),
+      jsxs("div", { children: [
+        jsxs("h1", { className: "text-2xl sm:text-3xl font-bold", children: [
           t("dashboard.welcome"),
           ", ",
           user.name,
           "!"
         ] }),
-        /* @__PURE__ */ jsx("p", { className: "text-base sm:text-lg text-muted-foreground", children: t(`role.${user.role}`) })
+        jsx("p", { className: "text-base sm:text-lg text-muted-foreground", children: t(`role.${user.role}`) })
       ] })
     ] }) }),
-    /* @__PURE__ */ jsx("div", { className: "grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3", children: actions.map((action, index) => {
+    jsx("div", { className: "grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3", children: actions.map((action, index) => {
       const Icon = action.icon;
-      return /* @__PURE__ */ jsx(
+      return jsx(
         Card,
         {
           className: "cursor-pointer hover:shadow-xl transition-all hover:-translate-y-1 border-2 hover:border-primary/50",
           onClick: () => navigate(action.path),
-          children: /* @__PURE__ */ jsxs(CardContent, { className: "p-6 sm:p-8", children: [
-            /* @__PURE__ */ jsx("div", { className: `${action.color} rounded-xl p-3 sm:p-4 w-fit mb-4 sm:mb-6`, children: /* @__PURE__ */ jsx(Icon, { className: "w-8 h-8 sm:w-10 sm:h-10 text-white" }) }),
-            /* @__PURE__ */ jsx("h3", { className: "text-lg sm:text-xl font-bold mb-2", children: action.title }),
-            /* @__PURE__ */ jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: action.description })
+          children: jsxs(CardContent, { className: "p-6 sm:p-8", children: [
+            jsx("div", { className: `${action.color} rounded-xl p-3 sm:p-4 w-fit mb-4 sm:mb-6`, children: jsx(Icon, { className: "w-8 h-8 sm:w-10 sm:h-10 text-white" }) }),
+            jsx("h3", { className: "text-lg sm:text-xl font-bold mb-2", children: action.title }),
+            jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: action.description })
           ] })
         },
         index
       );
     }) }),
-    /* @__PURE__ */ jsxs("div", { className: "mt-8 sm:mt-12 grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6", children: [
-      /* @__PURE__ */ jsx(Card, { children: /* @__PURE__ */ jsxs(CardContent, { className: "p-4 sm:p-6 text-center", children: [
-        /* @__PURE__ */ jsx("div", { className: "text-2xl sm:text-3xl font-bold text-primary mb-1 sm:mb-2", children: stats.posts }),
-        /* @__PURE__ */ jsx("div", { className: "text-xs sm:text-sm text-muted-foreground", children: user.role === "farmer" ? "Active Posts" : "Bids Placed" })
+    jsxs("div", { className: "mt-8 sm:mt-12 grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6", children: [
+      jsx(Card, { children: jsxs(CardContent, { className: "p-4 sm:p-6 text-center", children: [
+        jsx("div", { className: "text-2xl sm:text-3xl font-bold text-primary mb-1 sm:mb-2", children: stats.posts }),
+        jsx("div", { className: "text-xs sm:text-sm text-muted-foreground", children: user.role === "farmer" ? "Active Posts" : "Bids Placed" })
       ] }) }),
-      /* @__PURE__ */ jsx(Card, { children: /* @__PURE__ */ jsxs(CardContent, { className: "p-4 sm:p-6 text-center", children: [
-        /* @__PURE__ */ jsx("div", { className: "text-2xl sm:text-3xl font-bold text-accent mb-1 sm:mb-2", children: stats.bids }),
-        /* @__PURE__ */ jsx("div", { className: "text-xs sm:text-sm text-muted-foreground", children: user.role === "farmer" ? "Total Bids" : "Posts Available" })
+      jsx(Card, { children: jsxs(CardContent, { className: "p-4 sm:p-6 text-center", children: [
+        jsx("div", { className: "text-2xl sm:text-3xl font-bold text-accent mb-1 sm:mb-2", children: stats.bids }),
+        jsx("div", { className: "text-xs sm:text-sm text-muted-foreground", children: user.role === "farmer" ? "Total Bids" : "Posts Available" })
       ] }) }),
-      /* @__PURE__ */ jsx(Card, { className: "col-span-2 md:col-span-1", children: /* @__PURE__ */ jsxs(CardContent, { className: "p-4 sm:p-6 text-center", children: [
-        /* @__PURE__ */ jsx("div", { className: "text-2xl sm:text-3xl font-bold text-secondary mb-1 sm:mb-2", children: stats.chats }),
-        /* @__PURE__ */ jsx("div", { className: "text-xs sm:text-sm text-muted-foreground", children: "Active Chats" })
+      jsx(Card, { className: "col-span-2 md:col-span-1", children: jsxs(CardContent, { className: "p-4 sm:p-6 text-center", children: [
+        jsx("div", { className: "text-2xl sm:text-3xl font-bold text-secondary mb-1 sm:mb-2", children: stats.chats }),
+        jsx("div", { className: "text-xs sm:text-sm text-muted-foreground", children: "Active Chats" })
       ] }) })
     ] })
   ] }) });

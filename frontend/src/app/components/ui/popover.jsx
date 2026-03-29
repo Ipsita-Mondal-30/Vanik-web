@@ -5,12 +5,12 @@ import { cn } from "./utils";
 function Popover({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(PopoverPrimitive.Root, { "data-slot": "popover", ...props });
+  return jsx(PopoverPrimitive.Root, { "data-slot": "popover", ...props });
 }
 function PopoverTrigger({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(PopoverPrimitive.Trigger, { "data-slot": "popover-trigger", ...props });
+  return jsx(PopoverPrimitive.Trigger, { "data-slot": "popover-trigger", ...props });
 }
 function PopoverContent({
   className,
@@ -18,7 +18,7 @@ function PopoverContent({
   sideOffset = 4,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(PopoverPrimitive.Portal, { children: /* @__PURE__ */ jsx(
+  return jsx(PopoverPrimitive.Portal, { children: jsx(
     PopoverPrimitive.Content,
     {
       "data-slot": "popover-content",
@@ -35,7 +35,7 @@ function PopoverContent({
 function PopoverAnchor({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(PopoverPrimitive.Anchor, { "data-slot": "popover-anchor", ...props });
+  return jsx(PopoverPrimitive.Anchor, { "data-slot": "popover-anchor", ...props });
 }
 export {
   Popover,

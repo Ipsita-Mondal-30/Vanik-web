@@ -29,7 +29,7 @@ function Toggle({
   size,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     TogglePrimitive.Root,
     {
       "data-slot": "toggle",

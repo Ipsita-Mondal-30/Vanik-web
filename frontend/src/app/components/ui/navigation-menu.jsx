@@ -9,7 +9,7 @@ function NavigationMenu({
   viewport = true,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     NavigationMenuPrimitive.Root,
     {
       "data-slot": "navigation-menu",
@@ -21,7 +21,7 @@ function NavigationMenu({
       ...props,
       children: [
         children,
-        viewport && /* @__PURE__ */ jsx(NavigationMenuViewport, {})
+        viewport && jsx(NavigationMenuViewport, {})
       ]
     }
   );
@@ -30,7 +30,7 @@ function NavigationMenuList({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     NavigationMenuPrimitive.List,
     {
       "data-slot": "navigation-menu-list",
@@ -46,7 +46,7 @@ function NavigationMenuItem({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     NavigationMenuPrimitive.Item,
     {
       "data-slot": "navigation-menu-item",
@@ -63,7 +63,7 @@ function NavigationMenuTrigger({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     NavigationMenuPrimitive.Trigger,
     {
       "data-slot": "navigation-menu-trigger",
@@ -72,7 +72,7 @@ function NavigationMenuTrigger({
       children: [
         children,
         " ",
-        /* @__PURE__ */ jsx(
+        jsx(
           ChevronDownIcon,
           {
             className: "relative top-[1px] ml-1 size-3 transition duration-300 group-data-[state=open]:rotate-180",
@@ -87,7 +87,7 @@ function NavigationMenuContent({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     NavigationMenuPrimitive.Content,
     {
       "data-slot": "navigation-menu-content",
@@ -104,13 +104,13 @@ function NavigationMenuViewport({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       className: cn(
         "absolute top-full left-0 isolate z-50 flex justify-center"
       ),
-      children: /* @__PURE__ */ jsx(
+      children: jsx(
         NavigationMenuPrimitive.Viewport,
         {
           "data-slot": "navigation-menu-viewport",
@@ -128,7 +128,7 @@ function NavigationMenuLink({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     NavigationMenuPrimitive.Link,
     {
       "data-slot": "navigation-menu-link",
@@ -144,7 +144,7 @@ function NavigationMenuIndicator({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     NavigationMenuPrimitive.Indicator,
     {
       "data-slot": "navigation-menu-indicator",
@@ -153,7 +153,7 @@ function NavigationMenuIndicator({
         className
       ),
       ...props,
-      children: /* @__PURE__ */ jsx("div", { className: "bg-border relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm shadow-md" })
+      children: jsx("div", { className: "bg-border relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm shadow-md" })
     }
   );
 }

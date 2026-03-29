@@ -1,7 +1,7 @@
 import { jsx } from "react/jsx-runtime";
 import { cn } from "./utils";
 function Input({ className, type, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "input",
     {
       type,

@@ -15,7 +15,7 @@ function Slider({
     () => Array.isArray(value) ? value : Array.isArray(defaultValue) ? defaultValue : [min, max],
     [value, defaultValue, min, max]
   );
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     SliderPrimitive.Root,
     {
       "data-slot": "slider",
@@ -29,14 +29,14 @@ function Slider({
       ),
       ...props,
       children: [
-        /* @__PURE__ */ jsx(
+        jsx(
           SliderPrimitive.Track,
           {
             "data-slot": "slider-track",
             className: cn(
               "bg-muted relative grow overflow-hidden rounded-full data-[orientation=horizontal]:h-4 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5"
             ),
-            children: /* @__PURE__ */ jsx(
+            children: jsx(
               SliderPrimitive.Range,
               {
                 "data-slot": "slider-range",
@@ -47,7 +47,7 @@ function Slider({
             )
           }
         ),
-        Array.from({ length: _values.length }, (_, index) => /* @__PURE__ */ jsx(
+        Array.from({ length: _values.length }, (_, index) => jsx(
           SliderPrimitive.Thumb,
           {
             "data-slot": "slider-thumb",

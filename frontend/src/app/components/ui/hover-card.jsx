@@ -5,12 +5,12 @@ import { cn } from "./utils";
 function HoverCard({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(HoverCardPrimitive.Root, { "data-slot": "hover-card", ...props });
+  return jsx(HoverCardPrimitive.Root, { "data-slot": "hover-card", ...props });
 }
 function HoverCardTrigger({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(HoverCardPrimitive.Trigger, { "data-slot": "hover-card-trigger", ...props });
+  return jsx(HoverCardPrimitive.Trigger, { "data-slot": "hover-card-trigger", ...props });
 }
 function HoverCardContent({
   className,
@@ -18,7 +18,7 @@ function HoverCardContent({
   sideOffset = 4,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(HoverCardPrimitive.Portal, { "data-slot": "hover-card-portal", children: /* @__PURE__ */ jsx(
+  return jsx(HoverCardPrimitive.Portal, { "data-slot": "hover-card-portal", children: jsx(
     HoverCardPrimitive.Content,
     {
       "data-slot": "hover-card-content",

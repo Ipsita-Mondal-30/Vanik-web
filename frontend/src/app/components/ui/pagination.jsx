@@ -7,7 +7,7 @@ import {
 import { cn } from "./utils";
 import { buttonVariants } from "./button";
 function Pagination({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "nav",
     {
       role: "navigation",
@@ -22,7 +22,7 @@ function PaginationContent({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "ul",
     {
       "data-slot": "pagination-content",
@@ -32,7 +32,7 @@ function PaginationContent({
   );
 }
 function PaginationItem({ ...props }) {
-  return /* @__PURE__ */ jsx("li", { "data-slot": "pagination-item", ...props });
+  return jsx("li", { "data-slot": "pagination-item", ...props });
 }
 function PaginationLink({
   className,
@@ -40,7 +40,7 @@ function PaginationLink({
   size = "icon",
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "a",
     {
       "aria-current": isActive ? "page" : void 0,
@@ -61,7 +61,7 @@ function PaginationPrevious({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     PaginationLink,
     {
       "aria-label": "Go to previous page",
@@ -69,8 +69,8 @@ function PaginationPrevious({
       className: cn("gap-1 px-2.5 sm:pl-2.5", className),
       ...props,
       children: [
-        /* @__PURE__ */ jsx(ChevronLeftIcon, {}),
-        /* @__PURE__ */ jsx("span", { className: "hidden sm:block", children: "Previous" })
+        jsx(ChevronLeftIcon, {}),
+        jsx("span", { className: "hidden sm:block", children: "Previous" })
       ]
     }
   );
@@ -79,7 +79,7 @@ function PaginationNext({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     PaginationLink,
     {
       "aria-label": "Go to next page",
@@ -87,8 +87,8 @@ function PaginationNext({
       className: cn("gap-1 px-2.5 sm:pr-2.5", className),
       ...props,
       children: [
-        /* @__PURE__ */ jsx("span", { className: "hidden sm:block", children: "Next" }),
-        /* @__PURE__ */ jsx(ChevronRightIcon, {})
+        jsx("span", { className: "hidden sm:block", children: "Next" }),
+        jsx(ChevronRightIcon, {})
       ]
     }
   );
@@ -97,7 +97,7 @@ function PaginationEllipsis({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     "span",
     {
       "aria-hidden": true,
@@ -105,8 +105,8 @@ function PaginationEllipsis({
       className: cn("flex size-9 items-center justify-center", className),
       ...props,
       children: [
-        /* @__PURE__ */ jsx(MoreHorizontalIcon, { className: "size-4" }),
-        /* @__PURE__ */ jsx("span", { className: "sr-only", children: "More pages" })
+        jsx(MoreHorizontalIcon, { className: "size-4" }),
+        jsx("span", { className: "sr-only", children: "More pages" })
       ]
     }
   );

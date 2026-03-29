@@ -7,14 +7,14 @@ function ImageWithFallback(props) {
     setDidError(true);
   };
   const { src, alt, style, className, ...rest } = props;
-  return didError ? /* @__PURE__ */ jsx(
+  return didError ? jsx(
     "div",
     {
       className: `inline-block bg-gray-100 text-center align-middle ${className ?? ""}`,
       style,
-      children: /* @__PURE__ */ jsx("div", { className: "flex items-center justify-center w-full h-full", children: /* @__PURE__ */ jsx("img", { src: ERROR_IMG_SRC, alt: "Error loading image", ...rest, "data-original-url": src }) })
+      children: jsx("div", { className: "flex items-center justify-center w-full h-full", children: jsx("img", { src: ERROR_IMG_SRC, alt: "Error loading image", ...rest, "data-original-url": src }) })
     }
-  ) : /* @__PURE__ */ jsx("img", { src, alt, className, style, ...rest, onError: handleError });
+  ) : jsx("img", { src, alt, className, style, ...rest, onError: handleError });
 }
 export {
   ImageWithFallback

@@ -2,12 +2,12 @@
 import { jsx } from "react/jsx-runtime";
 import { cn } from "./utils";
 function Table({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "table-container",
       className: "relative w-full overflow-x-auto",
-      children: /* @__PURE__ */ jsx(
+      children: jsx(
         "table",
         {
           "data-slot": "table",
@@ -19,7 +19,7 @@ function Table({ className, ...props }) {
   );
 }
 function TableHeader({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "thead",
     {
       "data-slot": "table-header",
@@ -29,7 +29,7 @@ function TableHeader({ className, ...props }) {
   );
 }
 function TableBody({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "tbody",
     {
       "data-slot": "table-body",
@@ -39,7 +39,7 @@ function TableBody({ className, ...props }) {
   );
 }
 function TableFooter({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "tfoot",
     {
       "data-slot": "table-footer",
@@ -52,7 +52,7 @@ function TableFooter({ className, ...props }) {
   );
 }
 function TableRow({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "tr",
     {
       "data-slot": "table-row",
@@ -65,7 +65,7 @@ function TableRow({ className, ...props }) {
   );
 }
 function TableHead({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "th",
     {
       "data-slot": "table-head",
@@ -78,7 +78,7 @@ function TableHead({ className, ...props }) {
   );
 }
 function TableCell({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "td",
     {
       "data-slot": "table-cell",
@@ -94,7 +94,7 @@ function TableCaption({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "caption",
     {
       "data-slot": "table-caption",

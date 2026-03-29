@@ -20,7 +20,7 @@ function Alert({
   variant,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "alert",
@@ -31,7 +31,7 @@ function Alert({
   );
 }
 function AlertTitle({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "alert-title",
@@ -47,7 +47,7 @@ function AlertDescription({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "alert-description",

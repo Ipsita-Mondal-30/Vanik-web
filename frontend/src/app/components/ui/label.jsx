@@ -6,7 +6,7 @@ function Label({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     LabelPrimitive.Root,
     {
       "data-slot": "label",
