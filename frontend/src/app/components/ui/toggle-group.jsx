@@ -15,7 +15,7 @@ function ToggleGroup({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     ToggleGroupPrimitive.Root,
     {
       "data-slot": "toggle-group",
@@ -26,7 +26,7 @@ function ToggleGroup({
         className
       ),
       ...props,
-      children: /* @__PURE__ */ jsx(ToggleGroupContext.Provider, { value: { variant, size }, children })
+      children: jsx(ToggleGroupContext.Provider, { value: { variant, size }, children })
     }
   );
 }
@@ -38,7 +38,7 @@ function ToggleGroupItem({
   ...props
 }) {
   const context = React.useContext(ToggleGroupContext);
-  return /* @__PURE__ */ jsx(
+  return jsx(
     ToggleGroupPrimitive.Item,
     {
       "data-slot": "toggle-group-item",

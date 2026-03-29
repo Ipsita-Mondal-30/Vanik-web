@@ -10,17 +10,17 @@ import { cn } from "./utils";
 function Select({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(SelectPrimitive.Root, { "data-slot": "select", ...props });
+  return jsx(SelectPrimitive.Root, { "data-slot": "select", ...props });
 }
 function SelectGroup({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(SelectPrimitive.Group, { "data-slot": "select-group", ...props });
+  return jsx(SelectPrimitive.Group, { "data-slot": "select-group", ...props });
 }
 function SelectValue({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(SelectPrimitive.Value, { "data-slot": "select-value", ...props });
+  return jsx(SelectPrimitive.Value, { "data-slot": "select-value", ...props });
 }
 function SelectTrigger({
   className,
@@ -28,7 +28,7 @@ function SelectTrigger({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     SelectPrimitive.Trigger,
     {
       "data-slot": "select-trigger",
@@ -40,7 +40,7 @@ function SelectTrigger({
       ...props,
       children: [
         children,
-        /* @__PURE__ */ jsx(SelectPrimitive.Icon, { asChild: true, children: /* @__PURE__ */ jsx(ChevronDownIcon, { className: "size-4 opacity-50" }) })
+        jsx(SelectPrimitive.Icon, { asChild: true, children: jsx(ChevronDownIcon, { className: "size-4 opacity-50" }) })
       ]
     }
   );
@@ -51,7 +51,7 @@ function SelectContent({
   position = "popper",
   ...props
 }) {
-  return /* @__PURE__ */ jsx(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsxs(
+  return jsx(SelectPrimitive.Portal, { children: jsxs(
     SelectPrimitive.Content,
     {
       "data-slot": "select-content",
@@ -63,8 +63,8 @@ function SelectContent({
       position,
       ...props,
       children: [
-        /* @__PURE__ */ jsx(SelectScrollUpButton, {}),
-        /* @__PURE__ */ jsx(
+        jsx(SelectScrollUpButton, {}),
+        jsx(
           SelectPrimitive.Viewport,
           {
             className: cn(
@@ -74,7 +74,7 @@ function SelectContent({
             children
           }
         ),
-        /* @__PURE__ */ jsx(SelectScrollDownButton, {})
+        jsx(SelectScrollDownButton, {})
       ]
     }
   ) });
@@ -83,7 +83,7 @@ function SelectLabel({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     SelectPrimitive.Label,
     {
       "data-slot": "select-label",
@@ -97,7 +97,7 @@ function SelectItem({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     SelectPrimitive.Item,
     {
       "data-slot": "select-item",
@@ -107,8 +107,8 @@ function SelectItem({
       ),
       ...props,
       children: [
-        /* @__PURE__ */ jsx("span", { className: "absolute right-2 flex size-3.5 items-center justify-center", children: /* @__PURE__ */ jsx(SelectPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx(CheckIcon, { className: "size-4" }) }) }),
-        /* @__PURE__ */ jsx(SelectPrimitive.ItemText, { children })
+        jsx("span", { className: "absolute right-2 flex size-3.5 items-center justify-center", children: jsx(SelectPrimitive.ItemIndicator, { children: jsx(CheckIcon, { className: "size-4" }) }) }),
+        jsx(SelectPrimitive.ItemText, { children })
       ]
     }
   );
@@ -117,7 +117,7 @@ function SelectSeparator({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     SelectPrimitive.Separator,
     {
       "data-slot": "select-separator",
@@ -130,7 +130,7 @@ function SelectScrollUpButton({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     SelectPrimitive.ScrollUpButton,
     {
       "data-slot": "select-scroll-up-button",
@@ -139,7 +139,7 @@ function SelectScrollUpButton({
         className
       ),
       ...props,
-      children: /* @__PURE__ */ jsx(ChevronUpIcon, { className: "size-4" })
+      children: jsx(ChevronUpIcon, { className: "size-4" })
     }
   );
 }
@@ -147,7 +147,7 @@ function SelectScrollDownButton({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     SelectPrimitive.ScrollDownButton,
     {
       "data-slot": "select-scroll-down-button",
@@ -156,7 +156,7 @@ function SelectScrollDownButton({
         className
       ),
       ...props,
-      children: /* @__PURE__ */ jsx(ChevronDownIcon, { className: "size-4" })
+      children: jsx(ChevronDownIcon, { className: "size-4" })
     }
   );
 }

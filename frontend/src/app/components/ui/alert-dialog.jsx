@@ -6,23 +6,23 @@ import { buttonVariants } from "./button";
 function AlertDialog({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(AlertDialogPrimitive.Root, { "data-slot": "alert-dialog", ...props });
+  return jsx(AlertDialogPrimitive.Root, { "data-slot": "alert-dialog", ...props });
 }
 function AlertDialogTrigger({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(AlertDialogPrimitive.Trigger, { "data-slot": "alert-dialog-trigger", ...props });
+  return jsx(AlertDialogPrimitive.Trigger, { "data-slot": "alert-dialog-trigger", ...props });
 }
 function AlertDialogPortal({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(AlertDialogPrimitive.Portal, { "data-slot": "alert-dialog-portal", ...props });
+  return jsx(AlertDialogPrimitive.Portal, { "data-slot": "alert-dialog-portal", ...props });
 }
 function AlertDialogOverlay({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     AlertDialogPrimitive.Overlay,
     {
       "data-slot": "alert-dialog-overlay",
@@ -38,9 +38,9 @@ function AlertDialogContent({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(AlertDialogPortal, { children: [
-    /* @__PURE__ */ jsx(AlertDialogOverlay, {}),
-    /* @__PURE__ */ jsx(
+  return jsxs(AlertDialogPortal, { children: [
+    jsx(AlertDialogOverlay, {}),
+    jsx(
       AlertDialogPrimitive.Content,
       {
         "data-slot": "alert-dialog-content",
@@ -57,7 +57,7 @@ function AlertDialogHeader({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "alert-dialog-header",
@@ -70,7 +70,7 @@ function AlertDialogFooter({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "alert-dialog-footer",
@@ -86,7 +86,7 @@ function AlertDialogTitle({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     AlertDialogPrimitive.Title,
     {
       "data-slot": "alert-dialog-title",
@@ -99,7 +99,7 @@ function AlertDialogDescription({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     AlertDialogPrimitive.Description,
     {
       "data-slot": "alert-dialog-description",
@@ -112,7 +112,7 @@ function AlertDialogAction({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     AlertDialogPrimitive.Action,
     {
       className: cn(buttonVariants(), className),
@@ -124,7 +124,7 @@ function AlertDialogCancel({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     AlertDialogPrimitive.Cancel,
     {
       className: cn(buttonVariants({ variant: "outline" }), className),

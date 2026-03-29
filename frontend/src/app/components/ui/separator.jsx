@@ -8,7 +8,7 @@ function Separator({
   decorative = true,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     SeparatorPrimitive.Root,
     {
       "data-slot": "separator-root",

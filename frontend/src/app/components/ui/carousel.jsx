@@ -67,7 +67,7 @@ function Carousel({
       api?.off("select", onSelect);
     };
   }, [api, onSelect]);
-  return /* @__PURE__ */ jsx(
+  return jsx(
     CarouselContext.Provider,
     {
       value: {
@@ -80,7 +80,7 @@ function Carousel({
         canScrollPrev,
         canScrollNext
       },
-      children: /* @__PURE__ */ jsx(
+      children: jsx(
         "div",
         {
           onKeyDownCapture: handleKeyDown,
@@ -97,13 +97,13 @@ function Carousel({
 }
 function CarouselContent({ className, ...props }) {
   const { carouselRef, orientation } = useCarousel();
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       ref: carouselRef,
       className: "overflow-hidden",
       "data-slot": "carousel-content",
-      children: /* @__PURE__ */ jsx(
+      children: jsx(
         "div",
         {
           className: cn(
@@ -119,7 +119,7 @@ function CarouselContent({ className, ...props }) {
 }
 function CarouselItem({ className, ...props }) {
   const { orientation } = useCarousel();
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       role: "group",
@@ -141,7 +141,7 @@ function CarouselPrevious({
   ...props
 }) {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel();
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     Button,
     {
       "data-slot": "carousel-previous",
@@ -156,8 +156,8 @@ function CarouselPrevious({
       onClick: scrollPrev,
       ...props,
       children: [
-        /* @__PURE__ */ jsx(ArrowLeft, {}),
-        /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Previous slide" })
+        jsx(ArrowLeft, {}),
+        jsx("span", { className: "sr-only", children: "Previous slide" })
       ]
     }
   );
@@ -169,7 +169,7 @@ function CarouselNext({
   ...props
 }) {
   const { orientation, scrollNext, canScrollNext } = useCarousel();
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     Button,
     {
       "data-slot": "carousel-next",
@@ -184,8 +184,8 @@ function CarouselNext({
       onClick: scrollNext,
       ...props,
       children: [
-        /* @__PURE__ */ jsx(ArrowRight, {}),
-        /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Next slide" })
+        jsx(ArrowRight, {}),
+        jsx("span", { className: "sr-only", children: "Next slide" })
       ]
     }
   );

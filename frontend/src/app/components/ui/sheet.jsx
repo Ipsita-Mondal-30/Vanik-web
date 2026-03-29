@@ -4,28 +4,28 @@ import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
 import { cn } from "./utils";
 function Sheet({ ...props }) {
-  return /* @__PURE__ */ jsx(SheetPrimitive.Root, { "data-slot": "sheet", ...props });
+  return jsx(SheetPrimitive.Root, { "data-slot": "sheet", ...props });
 }
 function SheetTrigger({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(SheetPrimitive.Trigger, { "data-slot": "sheet-trigger", ...props });
+  return jsx(SheetPrimitive.Trigger, { "data-slot": "sheet-trigger", ...props });
 }
 function SheetClose({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(SheetPrimitive.Close, { "data-slot": "sheet-close", ...props });
+  return jsx(SheetPrimitive.Close, { "data-slot": "sheet-close", ...props });
 }
 function SheetPortal({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(SheetPrimitive.Portal, { "data-slot": "sheet-portal", ...props });
+  return jsx(SheetPrimitive.Portal, { "data-slot": "sheet-portal", ...props });
 }
 function SheetOverlay({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     SheetPrimitive.Overlay,
     {
       "data-slot": "sheet-overlay",
@@ -43,9 +43,9 @@ function SheetContent({
   side = "right",
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(SheetPortal, { children: [
-    /* @__PURE__ */ jsx(SheetOverlay, {}),
-    /* @__PURE__ */ jsxs(
+  return jsxs(SheetPortal, { children: [
+    jsx(SheetOverlay, {}),
+    jsxs(
       SheetPrimitive.Content,
       {
         "data-slot": "sheet-content",
@@ -60,9 +60,9 @@ function SheetContent({
         ...props,
         children: [
           children,
-          /* @__PURE__ */ jsxs(SheetPrimitive.Close, { className: "ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none", children: [
-            /* @__PURE__ */ jsx(XIcon, { className: "size-4" }),
-            /* @__PURE__ */ jsx("span", { className: "sr-only", children: "Close" })
+          jsxs(SheetPrimitive.Close, { className: "ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none", children: [
+            jsx(XIcon, { className: "size-4" }),
+            jsx("span", { className: "sr-only", children: "Close" })
           ] })
         ]
       }
@@ -70,7 +70,7 @@ function SheetContent({
   ] });
 }
 function SheetHeader({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "sheet-header",
@@ -80,7 +80,7 @@ function SheetHeader({ className, ...props }) {
   );
 }
 function SheetFooter({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "sheet-footer",
@@ -93,7 +93,7 @@ function SheetTitle({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     SheetPrimitive.Title,
     {
       "data-slot": "sheet-title",
@@ -106,7 +106,7 @@ function SheetDescription({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     SheetPrimitive.Description,
     {
       "data-slot": "sheet-description",

@@ -1,7 +1,7 @@
 import { jsx } from "react/jsx-runtime";
 import { cn } from "./utils";
 function Skeleton({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "skeleton",

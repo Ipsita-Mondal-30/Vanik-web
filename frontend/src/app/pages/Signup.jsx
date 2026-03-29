@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Sprout, ShoppingBag, ChevronRight } from "lucide-react";
 import { useApp } from "../contexts/AppContext";
 import api from "../api";
 import { Button } from "../components/ui/button";
@@ -106,7 +106,9 @@ export function Signup() {
                 className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-primary text-left group"
               >
                 <div className="flex items-center gap-4 sm:gap-6">
-                  <div className="text-5xl sm:text-6xl">{"\u{1F468}\u200D\u{1F33E}"}</div>
+                  <div className="bg-primary/10 rounded-full p-4 flex items-center justify-center shrink-0">
+                    <Sprout className="w-10 h-10 sm:w-12 sm:h-12 text-primary" />
+                  </div>
                   <div className="flex-1">
                     <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2 group-hover:text-primary transition-colors">
                       {t("role.farmer")}
@@ -115,9 +117,7 @@ export function Signup() {
                       {t("role.farmer.desc")}
                     </p>
                   </div>
-                  <div className="text-2xl sm:text-3xl text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                    →
-                  </div>
+                  <ChevronRight className="w-8 h-8 text-primary opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                 </div>
               </button>
               <button
@@ -126,7 +126,9 @@ export function Signup() {
                 className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all border-2 border-transparent hover:border-secondary text-left group"
               >
                 <div className="flex items-center gap-4 sm:gap-6">
-                  <div className="text-5xl sm:text-6xl">{"\u{1F477}"}</div>
+                  <div className="bg-secondary/10 rounded-full p-4 flex items-center justify-center shrink-0">
+                    <ShoppingBag className="w-10 h-10 sm:w-12 sm:h-12 text-secondary" />
+                  </div>
                   <div className="flex-1">
                     <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2 group-hover:text-secondary transition-colors">
                       {t("role.buyer")}
@@ -135,9 +137,7 @@ export function Signup() {
                       {t("role.buyer.desc")}
                     </p>
                   </div>
-                  <div className="text-2xl sm:text-3xl text-secondary opacity-0 group-hover:opacity-100 transition-opacity">
-                    →
-                  </div>
+                  <ChevronRight className="w-8 h-8 text-secondary opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                 </div>
               </button>
             </div>
@@ -147,10 +147,12 @@ export function Signup() {
           <Card className="shadow-xl">
             <CardContent className="p-6 sm:p-8">
               <div className="bg-muted rounded-xl p-4 sm:p-6 mb-6 sm:mb-8 flex items-center gap-3 sm:gap-4">
-                <div className="text-4xl sm:text-5xl">
-                  {selectedRole === "farmer"
-                    ? "\u{1F468}\u200D\u{1F33E}"
-                    : "\u{1F477}"}
+                <div className="rounded-full p-3 flex items-center justify-center bg-background">
+                  {selectedRole === "farmer" ? (
+                    <Sprout className="w-10 h-10 sm:w-12 sm:h-12 text-primary" />
+                  ) : (
+                    <ShoppingBag className="w-10 h-10 sm:w-12 sm:h-12 text-secondary" />
+                  )}
                 </div>
                 <div>
                   <p className="text-xs sm:text-sm text-muted-foreground">

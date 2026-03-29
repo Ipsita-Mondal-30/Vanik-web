@@ -6,7 +6,7 @@ function Avatar({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     AvatarPrimitive.Root,
     {
       "data-slot": "avatar",
@@ -22,7 +22,7 @@ function AvatarImage({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     AvatarPrimitive.Image,
     {
       "data-slot": "avatar-image",
@@ -35,7 +35,7 @@ function AvatarFallback({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     AvatarPrimitive.Fallback,
     {
       "data-slot": "avatar-fallback",

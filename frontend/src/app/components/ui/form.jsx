@@ -17,7 +17,7 @@ const FormFieldContext = React.createContext(
 const FormField = ({
   ...props
 }) => {
-  return /* @__PURE__ */ jsx(FormFieldContext.Provider, { value: { name: props.name }, children: /* @__PURE__ */ jsx(Controller, { ...props }) });
+  return jsx(FormFieldContext.Provider, { value: { name: props.name }, children: jsx(Controller, { ...props }) });
 };
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
@@ -43,7 +43,7 @@ const FormItemContext = React.createContext(
 );
 function FormItem({ className, ...props }) {
   const id = React.useId();
-  return /* @__PURE__ */ jsx(FormItemContext.Provider, { value: { id }, children: /* @__PURE__ */ jsx(
+  return jsx(FormItemContext.Provider, { value: { id }, children: jsx(
     "div",
     {
       "data-slot": "form-item",
@@ -57,7 +57,7 @@ function FormLabel({
   ...props
 }) {
   const { error, formItemId } = useFormField();
-  return /* @__PURE__ */ jsx(
+  return jsx(
     Label,
     {
       "data-slot": "form-label",
@@ -70,7 +70,7 @@ function FormLabel({
 }
 function FormControl({ ...props }) {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
-  return /* @__PURE__ */ jsx(
+  return jsx(
     Slot,
     {
       "data-slot": "form-control",
@@ -83,7 +83,7 @@ function FormControl({ ...props }) {
 }
 function FormDescription({ className, ...props }) {
   const { formDescriptionId } = useFormField();
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "p",
     {
       "data-slot": "form-description",
@@ -99,7 +99,7 @@ function FormMessage({ className, ...props }) {
   if (!body) {
     return null;
   }
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "p",
     {
       "data-slot": "form-message",

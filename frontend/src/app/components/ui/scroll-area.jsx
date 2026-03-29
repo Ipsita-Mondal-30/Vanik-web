@@ -7,14 +7,14 @@ function ScrollArea({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     ScrollAreaPrimitive.Root,
     {
       "data-slot": "scroll-area",
       className: cn("relative", className),
       ...props,
       children: [
-        /* @__PURE__ */ jsx(
+        jsx(
           ScrollAreaPrimitive.Viewport,
           {
             "data-slot": "scroll-area-viewport",
@@ -22,8 +22,8 @@ function ScrollArea({
             children
           }
         ),
-        /* @__PURE__ */ jsx(ScrollBar, {}),
-        /* @__PURE__ */ jsx(ScrollAreaPrimitive.Corner, {})
+        jsx(ScrollBar, {}),
+        jsx(ScrollAreaPrimitive.Corner, {})
       ]
     }
   );
@@ -33,7 +33,7 @@ function ScrollBar({
   orientation = "vertical",
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     ScrollAreaPrimitive.ScrollAreaScrollbar,
     {
       "data-slot": "scroll-area-scrollbar",
@@ -45,7 +45,7 @@ function ScrollBar({
         className
       ),
       ...props,
-      children: /* @__PURE__ */ jsx(
+      children: jsx(
         ScrollAreaPrimitive.ScrollAreaThumb,
         {
           "data-slot": "scroll-area-thumb",

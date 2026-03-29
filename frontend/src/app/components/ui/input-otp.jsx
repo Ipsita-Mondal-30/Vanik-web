@@ -9,7 +9,7 @@ function InputOTP({
   containerClassName,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     OTPInput,
     {
       "data-slot": "input-otp",
@@ -23,7 +23,7 @@ function InputOTP({
   );
 }
 function InputOTPGroup({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "input-otp-group",
@@ -39,7 +39,7 @@ function InputOTPSlot({
 }) {
   const inputOTPContext = React.useContext(OTPInputContext);
   const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {};
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     "div",
     {
       "data-slot": "input-otp-slot",
@@ -51,13 +51,13 @@ function InputOTPSlot({
       ...props,
       children: [
         char,
-        hasFakeCaret && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 flex items-center justify-center", children: /* @__PURE__ */ jsx("div", { className: "animate-caret-blink bg-foreground h-4 w-px duration-1000" }) })
+        hasFakeCaret && jsx("div", { className: "pointer-events-none absolute inset-0 flex items-center justify-center", children: jsx("div", { className: "animate-caret-blink bg-foreground h-4 w-px duration-1000" }) })
       ]
     }
   );
 }
 function InputOTPSeparator({ ...props }) {
-  return /* @__PURE__ */ jsx("div", { "data-slot": "input-otp-separator", role: "separator", ...props, children: /* @__PURE__ */ jsx(MinusIcon, {}) });
+  return jsx("div", { "data-slot": "input-otp-separator", role: "separator", ...props, children: jsx(MinusIcon, {}) });
 }
 export {
   InputOTP,

@@ -6,32 +6,32 @@ import { cn } from "./utils";
 function ContextMenu({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(ContextMenuPrimitive.Root, { "data-slot": "context-menu", ...props });
+  return jsx(ContextMenuPrimitive.Root, { "data-slot": "context-menu", ...props });
 }
 function ContextMenuTrigger({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(ContextMenuPrimitive.Trigger, { "data-slot": "context-menu-trigger", ...props });
+  return jsx(ContextMenuPrimitive.Trigger, { "data-slot": "context-menu-trigger", ...props });
 }
 function ContextMenuGroup({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(ContextMenuPrimitive.Group, { "data-slot": "context-menu-group", ...props });
+  return jsx(ContextMenuPrimitive.Group, { "data-slot": "context-menu-group", ...props });
 }
 function ContextMenuPortal({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(ContextMenuPrimitive.Portal, { "data-slot": "context-menu-portal", ...props });
+  return jsx(ContextMenuPrimitive.Portal, { "data-slot": "context-menu-portal", ...props });
 }
 function ContextMenuSub({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(ContextMenuPrimitive.Sub, { "data-slot": "context-menu-sub", ...props });
+  return jsx(ContextMenuPrimitive.Sub, { "data-slot": "context-menu-sub", ...props });
 }
 function ContextMenuRadioGroup({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     ContextMenuPrimitive.RadioGroup,
     {
       "data-slot": "context-menu-radio-group",
@@ -45,7 +45,7 @@ function ContextMenuSubTrigger({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     ContextMenuPrimitive.SubTrigger,
     {
       "data-slot": "context-menu-sub-trigger",
@@ -57,7 +57,7 @@ function ContextMenuSubTrigger({
       ...props,
       children: [
         children,
-        /* @__PURE__ */ jsx(ChevronRightIcon, { className: "ml-auto" })
+        jsx(ChevronRightIcon, { className: "ml-auto" })
       ]
     }
   );
@@ -66,7 +66,7 @@ function ContextMenuSubContent({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     ContextMenuPrimitive.SubContent,
     {
       "data-slot": "context-menu-sub-content",
@@ -82,7 +82,7 @@ function ContextMenuContent({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(ContextMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx(
+  return jsx(ContextMenuPrimitive.Portal, { children: jsx(
     ContextMenuPrimitive.Content,
     {
       "data-slot": "context-menu-content",
@@ -100,7 +100,7 @@ function ContextMenuItem({
   variant = "default",
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     ContextMenuPrimitive.Item,
     {
       "data-slot": "context-menu-item",
@@ -120,7 +120,7 @@ function ContextMenuCheckboxItem({
   checked,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     ContextMenuPrimitive.CheckboxItem,
     {
       "data-slot": "context-menu-checkbox-item",
@@ -131,7 +131,7 @@ function ContextMenuCheckboxItem({
       checked,
       ...props,
       children: [
-        /* @__PURE__ */ jsx("span", { className: "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center", children: /* @__PURE__ */ jsx(ContextMenuPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx(CheckIcon, { className: "size-4" }) }) }),
+        jsx("span", { className: "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center", children: jsx(ContextMenuPrimitive.ItemIndicator, { children: jsx(CheckIcon, { className: "size-4" }) }) }),
         children
       ]
     }
@@ -142,7 +142,7 @@ function ContextMenuRadioItem({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     ContextMenuPrimitive.RadioItem,
     {
       "data-slot": "context-menu-radio-item",
@@ -152,7 +152,7 @@ function ContextMenuRadioItem({
       ),
       ...props,
       children: [
-        /* @__PURE__ */ jsx("span", { className: "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center", children: /* @__PURE__ */ jsx(ContextMenuPrimitive.ItemIndicator, { children: /* @__PURE__ */ jsx(CircleIcon, { className: "size-2 fill-current" }) }) }),
+        jsx("span", { className: "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center", children: jsx(ContextMenuPrimitive.ItemIndicator, { children: jsx(CircleIcon, { className: "size-2 fill-current" }) }) }),
         children
       ]
     }
@@ -163,7 +163,7 @@ function ContextMenuLabel({
   inset,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     ContextMenuPrimitive.Label,
     {
       "data-slot": "context-menu-label",
@@ -180,7 +180,7 @@ function ContextMenuSeparator({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     ContextMenuPrimitive.Separator,
     {
       "data-slot": "context-menu-separator",
@@ -193,7 +193,7 @@ function ContextMenuShortcut({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "span",
     {
       "data-slot": "context-menu-shortcut",

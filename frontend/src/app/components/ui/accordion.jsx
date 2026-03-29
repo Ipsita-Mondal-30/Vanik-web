@@ -6,13 +6,13 @@ import { cn } from "./utils";
 function Accordion({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(AccordionPrimitive.Root, { "data-slot": "accordion", ...props });
+  return jsx(AccordionPrimitive.Root, { "data-slot": "accordion", ...props });
 }
 function AccordionItem({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     AccordionPrimitive.Item,
     {
       "data-slot": "accordion-item",
@@ -26,7 +26,7 @@ function AccordionTrigger({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(AccordionPrimitive.Header, { className: "flex", children: /* @__PURE__ */ jsxs(
+  return jsx(AccordionPrimitive.Header, { className: "flex", children: jsxs(
     AccordionPrimitive.Trigger,
     {
       "data-slot": "accordion-trigger",
@@ -37,7 +37,7 @@ function AccordionTrigger({
       ...props,
       children: [
         children,
-        /* @__PURE__ */ jsx(ChevronDownIcon, { className: "text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" })
+        jsx(ChevronDownIcon, { className: "text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" })
       ]
     }
   ) });
@@ -47,13 +47,13 @@ function AccordionContent({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     AccordionPrimitive.Content,
     {
       "data-slot": "accordion-content",
       className: "data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm",
       ...props,
-      children: /* @__PURE__ */ jsx("div", { className: cn("pt-0 pb-4", className), children })
+      children: jsx("div", { className: cn("pt-0 pb-4", className), children })
     }
   );
 }

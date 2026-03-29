@@ -10,7 +10,7 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     DayPicker,
     {
       showOutsideDays,
@@ -50,8 +50,8 @@ function Calendar({
         ...classNames
       },
       components: {
-        IconLeft: ({ className: className2, ...props2 }) => /* @__PURE__ */ jsx(ChevronLeft, { className: cn("size-4", className2), ...props2 }),
-        IconRight: ({ className: className2, ...props2 }) => /* @__PURE__ */ jsx(ChevronRight, { className: cn("size-4", className2), ...props2 })
+        IconLeft: ({ className: className2, ...props2 }) => jsx(ChevronLeft, { className: cn("size-4", className2), ...props2 }),
+        IconRight: ({ className: className2, ...props2 }) => jsx(ChevronRight, { className: cn("size-4", className2), ...props2 })
       },
       ...props
     }

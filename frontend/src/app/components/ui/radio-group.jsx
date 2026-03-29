@@ -7,7 +7,7 @@ function RadioGroup({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     RadioGroupPrimitive.Root,
     {
       "data-slot": "radio-group",
@@ -20,7 +20,7 @@ function RadioGroupItem({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     RadioGroupPrimitive.Item,
     {
       "data-slot": "radio-group-item",
@@ -29,12 +29,12 @@ function RadioGroupItem({
         className
       ),
       ...props,
-      children: /* @__PURE__ */ jsx(
+      children: jsx(
         RadioGroupPrimitive.Indicator,
         {
           "data-slot": "radio-group-indicator",
           className: "relative flex items-center justify-center",
-          children: /* @__PURE__ */ jsx(CircleIcon, { className: "fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" })
+          children: jsx(CircleIcon, { className: "fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" })
         }
       )
     }

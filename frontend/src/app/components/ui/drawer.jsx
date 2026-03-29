@@ -5,28 +5,28 @@ import { cn } from "./utils";
 function Drawer({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(DrawerPrimitive.Root, { "data-slot": "drawer", ...props });
+  return jsx(DrawerPrimitive.Root, { "data-slot": "drawer", ...props });
 }
 function DrawerTrigger({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(DrawerPrimitive.Trigger, { "data-slot": "drawer-trigger", ...props });
+  return jsx(DrawerPrimitive.Trigger, { "data-slot": "drawer-trigger", ...props });
 }
 function DrawerPortal({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(DrawerPrimitive.Portal, { "data-slot": "drawer-portal", ...props });
+  return jsx(DrawerPrimitive.Portal, { "data-slot": "drawer-portal", ...props });
 }
 function DrawerClose({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(DrawerPrimitive.Close, { "data-slot": "drawer-close", ...props });
+  return jsx(DrawerPrimitive.Close, { "data-slot": "drawer-close", ...props });
 }
 function DrawerOverlay({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     DrawerPrimitive.Overlay,
     {
       "data-slot": "drawer-overlay",
@@ -43,9 +43,9 @@ function DrawerContent({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(DrawerPortal, { "data-slot": "drawer-portal", children: [
-    /* @__PURE__ */ jsx(DrawerOverlay, {}),
-    /* @__PURE__ */ jsxs(
+  return jsxs(DrawerPortal, { "data-slot": "drawer-portal", children: [
+    jsx(DrawerOverlay, {}),
+    jsxs(
       DrawerPrimitive.Content,
       {
         "data-slot": "drawer-content",
@@ -59,7 +59,7 @@ function DrawerContent({
         ),
         ...props,
         children: [
-          /* @__PURE__ */ jsx("div", { className: "bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" }),
+          jsx("div", { className: "bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" }),
           children
         ]
       }
@@ -67,7 +67,7 @@ function DrawerContent({
   ] });
 }
 function DrawerHeader({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "drawer-header",
@@ -77,7 +77,7 @@ function DrawerHeader({ className, ...props }) {
   );
 }
 function DrawerFooter({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "div",
     {
       "data-slot": "drawer-footer",
@@ -90,7 +90,7 @@ function DrawerTitle({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     DrawerPrimitive.Title,
     {
       "data-slot": "drawer-title",
@@ -103,7 +103,7 @@ function DrawerDescription({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     DrawerPrimitive.Description,
     {
       "data-slot": "drawer-description",

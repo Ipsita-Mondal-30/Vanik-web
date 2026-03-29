@@ -3,10 +3,10 @@ import { Slot } from "@radix-ui/react-slot";
 import { ChevronRight, MoreHorizontal } from "lucide-react";
 import { cn } from "./utils";
 function Breadcrumb({ ...props }) {
-  return /* @__PURE__ */ jsx("nav", { "aria-label": "breadcrumb", "data-slot": "breadcrumb", ...props });
+  return jsx("nav", { "aria-label": "breadcrumb", "data-slot": "breadcrumb", ...props });
 }
 function BreadcrumbList({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "ol",
     {
       "data-slot": "breadcrumb-list",
@@ -19,7 +19,7 @@ function BreadcrumbList({ className, ...props }) {
   );
 }
 function BreadcrumbItem({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "li",
     {
       "data-slot": "breadcrumb-item",
@@ -34,7 +34,7 @@ function BreadcrumbLink({
   ...props
 }) {
   const Comp = asChild ? Slot : "a";
-  return /* @__PURE__ */ jsx(
+  return jsx(
     Comp,
     {
       "data-slot": "breadcrumb-link",
@@ -44,7 +44,7 @@ function BreadcrumbLink({
   );
 }
 function BreadcrumbPage({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "span",
     {
       "data-slot": "breadcrumb-page",
@@ -61,7 +61,7 @@ function BreadcrumbSeparator({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     "li",
     {
       "data-slot": "breadcrumb-separator",
@@ -69,7 +69,7 @@ function BreadcrumbSeparator({
       "aria-hidden": "true",
       className: cn("[&>svg]:size-3.5", className),
       ...props,
-      children: children ?? /* @__PURE__ */ jsx(ChevronRight, {})
+      children: children ?? jsx(ChevronRight, {})
     }
   );
 }
@@ -77,7 +77,7 @@ function BreadcrumbEllipsis({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs(
+  return jsxs(
     "span",
     {
       "data-slot": "breadcrumb-ellipsis",
@@ -86,8 +86,8 @@ function BreadcrumbEllipsis({
       className: cn("flex size-9 items-center justify-center", className),
       ...props,
       children: [
-        /* @__PURE__ */ jsx(MoreHorizontal, { className: "size-4" }),
-        /* @__PURE__ */ jsx("span", { className: "sr-only", children: "More" })
+        jsx(MoreHorizontal, { className: "size-4" }),
+        jsx("span", { className: "sr-only", children: "More" })
       ]
     }
   );

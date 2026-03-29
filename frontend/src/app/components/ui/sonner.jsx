@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { Toaster as Sonner } from "sonner";
 const Toaster = ({ ...props }) => {
   const { theme = "system" } = useTheme();
-  return /* @__PURE__ */ jsx(
+  return jsx(
     Sonner,
     {
       theme,

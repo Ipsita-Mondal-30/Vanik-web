@@ -4,7 +4,7 @@ import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio";
 function AspectRatio({
   ...props
 }) {
-  return /* @__PURE__ */ jsx(AspectRatioPrimitive.Root, { "data-slot": "aspect-ratio", ...props });
+  return jsx(AspectRatioPrimitive.Root, { "data-slot": "aspect-ratio", ...props });
 }
 export {
   AspectRatio

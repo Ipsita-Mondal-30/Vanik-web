@@ -7,7 +7,7 @@ function Progress({
   value,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(
+  return jsx(
     ProgressPrimitive.Root,
     {
       "data-slot": "progress",
@@ -16,7 +16,7 @@ function Progress({
         className
       ),
       ...props,
-      children: /* @__PURE__ */ jsx(
+      children: jsx(
         ProgressPrimitive.Indicator,
         {
           "data-slot": "progress-indicator",
