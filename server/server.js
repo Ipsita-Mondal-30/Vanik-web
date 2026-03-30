@@ -27,7 +27,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/bids", bidRoutes);
-
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
 });
