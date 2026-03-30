@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite"
+    "dev": "node api.js && vite"
   },
   "dependencies": {
     "axios": "^1.7.9",
