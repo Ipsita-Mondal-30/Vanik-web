@@ -4,14 +4,41 @@ import { useNavigate } from "react-router";
 import { useApp } from "../contexts/AppContext";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, IndianRupee, ShoppingCart, Mail, Sprout, ArrowRight } from "lucide-react";
+import { ArrowLeft, IndianRupee, ShoppingCart, Mail, Sprout, ArrowRight, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { fetchPosts } from "../postsApi";
 function BrowsePosts() {
   const navigate = useNavigate();
   const { user, t } = useApp();
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const savedPosts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-    setPosts(savedPosts);
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const list = await fetchPosts();
+        if (!cancelled) {
+          setPosts(list);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          const msg =
+            err.response?.data?.message ||
+            err.message ||
+            "Could not load posts.";
+          toast.error(msg);
+          setPosts([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
   if (!user) {
     navigate("/login");
@@ -38,7 +65,10 @@ function BrowsePosts() {
         jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Find crops and services" })
       ] })
     ] }),
-    posts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
+    loading ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
+      jsx(Loader2, { className: "w-10 h-10 mx-auto animate-spin text-primary mb-4" }),
+      jsx("p", { className: "text-muted-foreground", children: t("common.loading") })
+    ] }) }) : posts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
       jsx("div", { className: "flex justify-center mb-4", children: jsx(Mail, { className: "w-14 h-14 sm:w-16 sm:h-16 text-muted-foreground" }) }),
       jsx("h3", { className: "text-lg sm:text-xl font-semibold mb-2", children: t("post.noPosts") }),
       jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Check back later for new posts" })

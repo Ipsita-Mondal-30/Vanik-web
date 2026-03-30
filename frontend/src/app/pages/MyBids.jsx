@@ -4,29 +4,44 @@ import { useNavigate } from "react-router";
 import { useApp } from "../contexts/AppContext";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, IndianRupee, Eye, Target, Mail, Sprout } from "lucide-react";
+import { ArrowLeft, IndianRupee, Eye, Target, Mail, Sprout, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { fetchMyBids } from "../bidsApi";
 function MyBids() {
   const navigate = useNavigate();
   const { user, t } = useApp();
   const [bidsWithPosts, setBidsWithPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (user) {
-      const allBids = JSON.parse(localStorage.getItem("vanik_bids") || "[]");
-      const userBids = allBids.filter((bid) => bid.buyerId === user.id);
-      const posts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-      const bidsWithInfo = userBids.map((bid) => {
-        const post = posts.find((p) => p.id === bid.postId);
-        return {
-          ...bid,
-          postTitle: post?.title || "Unknown Post",
-          farmerName: post?.farmerName || "Unknown Farmer"
-        };
-      });
-      bidsWithInfo.sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-      setBidsWithPosts(bidsWithInfo);
+    if (!user) {
+      return;
     }
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const list = await fetchMyBids();
+        if (!cancelled) {
+          setBidsWithPosts(list);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          toast.error(
+            err.response?.data?.message ||
+              err.message ||
+              "Could not load your bids.",
+          );
+          setBidsWithPosts([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
   if (!user || user.role !== "buyer") {
     navigate("/dashboard");
@@ -53,7 +68,10 @@ function MyBids() {
         jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Track your bids" })
       ] })
     ] }),
-    bidsWithPosts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
+    loading ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
+      jsx(Loader2, { className: "w-10 h-10 mx-auto animate-spin text-primary mb-4" }),
+      jsx("p", { className: "text-muted-foreground", children: t("common.loading") })
+    ] }) }) : bidsWithPosts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
       jsx("div", { className: "flex justify-center mb-4", children: jsx(Mail, { className: "w-14 h-14 sm:w-16 sm:h-16 text-muted-foreground" }) }),
       jsx("h3", { className: "text-lg sm:text-xl font-semibold mb-2", children: t("bid.noBids") }),
       jsx("p", { className: "text-sm sm:text-base text-muted-foreground mb-6", children: "Start bidding on posts" }),

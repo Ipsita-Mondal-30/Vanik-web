@@ -7,7 +7,9 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, FileText } from "lucide-react";
+import { ArrowLeft, FileText, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { createPost as createPostApi } from "../postsApi";
 function CreatePost() {
   const navigate = useNavigate();
   const { user, t } = useApp();
@@ -16,26 +18,34 @@ function CreatePost() {
     description: "",
     price: ""
   });
+  const [submitting, setSubmitting] = useState(false);
   if (!user || user.role !== "farmer") {
     navigate("/dashboard");
     return null;
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title || !formData.description) {
       return;
     }
-    const posts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-    const newPost = {
-      id: Date.now().toString(),
-      ...formData,
-      farmerId: user.id,
-      farmerName: user.name,
-      createdAt: (new Date()).toISOString()
-    };
-    posts.push(newPost);
-    localStorage.setItem("vanik_posts", JSON.stringify(posts));
-    navigate("/my-posts");
+    setSubmitting(true);
+    try {
+      await createPostApi({
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        price: formData.price
+      });
+      toast.success("Post published");
+      navigate("/my-posts");
+    } catch (err) {
+      const msg =
+        err.response?.data?.message ||
+        err.message ||
+        "Could not create post. Is the server running?";
+      toast.error(msg);
+    } finally {
+      setSubmitting(false);
+    }
   };
   return jsx("div", { className: "min-h-[calc(100vh-5rem)] bg-gradient-to-b from-background to-muted/30 py-8 sm:py-12 px-4", children: jsxs("div", { className: "max-w-2xl mx-auto", children: [
     jsxs(
@@ -74,6 +84,7 @@ function CreatePost() {
               value: formData.title,
               onChange: (e) => setFormData({ ...formData, title: e.target.value }),
               required: true,
+              disabled: submitting,
               className: "h-12 sm:h-14 text-base sm:text-lg"
             }
           )
@@ -91,6 +102,7 @@ function CreatePost() {
               value: formData.description,
               onChange: (e) => setFormData({ ...formData, description: e.target.value }),
               required: true,
+              disabled: submitting,
               rows: 6,
               className: "text-base sm:text-lg resize-none"
             }
@@ -109,6 +121,7 @@ function CreatePost() {
               placeholder: "5000",
               value: formData.price,
               onChange: (e) => setFormData({ ...formData, price: e.target.value }),
+              disabled: submitting,
               className: "h-12 sm:h-14 text-base sm:text-lg"
             }
           ),
@@ -120,7 +133,18 @@ function CreatePost() {
             type: "submit",
             size: "lg",
             className: "w-full h-12 sm:h-14 text-base sm:text-lg",
-            children: t("post.submit")
+            disabled: submitting,
+            children: submitting
+              ? jsxs("span", {
+                  className: "inline-flex items-center justify-center",
+                  children: [
+                    jsx(Loader2, {
+                      className: "w-5 h-5 mr-2 animate-spin shrink-0",
+                    }),
+                    t("common.loading"),
+                  ],
+                })
+              : t("post.submit")
           }
         )
       ] })

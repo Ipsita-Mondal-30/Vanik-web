@@ -6,24 +6,61 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, IndianRupee, User, Mail } from "lucide-react";
+import { ArrowLeft, IndianRupee, User, Mail, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { fetchPost } from "../postsApi";
+import { createBid as submitBidApi } from "../bidsApi";
 function PostDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, t } = useApp();
   const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [bidAmount, setBidAmount] = useState("");
+  const [placingBid, setPlacingBid] = useState(false);
   useEffect(() => {
-    if (id) {
-      const posts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-      const foundPost = posts.find((p) => p.id === id);
-      setPost(foundPost || null);
+    if (!id) {
+      setLoading(false);
+      return;
     }
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const data = await fetchPost(id);
+        if (!cancelled) {
+          setPost(data);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setPost(null);
+          const msg =
+            err.response?.data?.message ||
+            err.message ||
+            "Could not load post.";
+          if (err.response?.status !== 404) {
+            toast.error(msg);
+          }
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
   if (!user) {
     navigate("/login");
     return null;
+  }
+  if (loading) {
+    return jsx("div", { className: "min-h-[calc(100vh-5rem)] flex items-center justify-center", children: jsxs("div", { className: "text-center", children: [
+      jsx(Loader2, { className: "w-10 h-10 mx-auto animate-spin text-primary mb-4" }),
+      jsx("p", { className: "text-muted-foreground", children: t("common.loading") })
+    ] }) });
   }
   if (!post) {
     return jsx("div", { className: "min-h-[calc(100vh-5rem)] flex items-center justify-center", children: jsxs("div", { className: "text-center", children: [
@@ -31,27 +68,27 @@ function PostDetails() {
       jsx("h3", { className: "text-xl font-semibold", children: "Post not found" })
     ] }) });
   }
-  const handlePlaceBid = (e) => {
+  const handlePlaceBid = async (e) => {
     e.preventDefault();
     if (!bidAmount || parseFloat(bidAmount) <= 0) {
       toast.error("Please enter a valid bid amount");
       return;
     }
-    const bids = JSON.parse(localStorage.getItem("vanik_bids") || "[]");
-    const newBid = {
-      id: Date.now().toString(),
-      postId: post.id,
-      buyerId: user.id,
-      buyerName: user.name,
-      amount: bidAmount,
-      createdAt: (new Date()).toISOString()
-    };
-    bids.push(newBid);
-    localStorage.setItem("vanik_bids", JSON.stringify(bids));
-    toast.success("Bid placed successfully!");
-    setBidAmount("");
+    setPlacingBid(true);
+    try {
+      await submitBidApi({ postId: post.id, amount: bidAmount });
+      toast.success("Bid placed successfully!");
+      setBidAmount("");
+    } catch (err) {
+      const msg =
+        err.response?.data?.message ||
+        err.message ||
+        "Could not place bid.";
+      toast.error(msg);
+    } finally {
+      setPlacingBid(false);
+    }
   };
-  const isFarmer = user.role === "farmer";
   const isOwnPost = post.farmerId === user.id;
   return jsx("div", { className: "min-h-[calc(100vh-5rem)] bg-gradient-to-b from-background to-muted/30 py-8 sm:py-12 px-4", children: jsxs("div", { className: "max-w-3xl mx-auto", children: [
     jsxs(
@@ -106,6 +143,7 @@ function PostDetails() {
                 placeholder: "5000",
                 value: bidAmount,
                 onChange: (e) => setBidAmount(e.target.value),
+                disabled: placingBid,
                 className: "h-12 sm:h-14 text-base sm:text-lg pl-10",
                 required: true
               }
@@ -117,7 +155,8 @@ function PostDetails() {
               type: "submit",
               size: "lg",
               className: "h-12 sm:h-14 px-6 sm:px-8",
-              children: t("bid.place")
+              disabled: placingBid,
+              children: placingBid ? t("common.loading") : t("bid.place")
             }
           )
         ] })

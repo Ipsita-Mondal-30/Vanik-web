@@ -4,26 +4,61 @@ import { useNavigate } from "react-router";
 import { useApp } from "../contexts/AppContext";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, IndianRupee, PlusCircle, ClipboardList, FileText } from "lucide-react";
+import { ArrowLeft, IndianRupee, PlusCircle, ClipboardList, FileText, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { fetchPosts } from "../postsApi";
+import { fetchBidsOnMyPosts } from "../bidsApi";
 function MyPosts() {
   const navigate = useNavigate();
   const { user, t } = useApp();
   const [posts, setPosts] = useState([]);
+  const [bidCountByPostId, setBidCountByPostId] = useState({});
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (user) {
-      const savedPosts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-      const userPosts = savedPosts.filter((post) => post.farmerId === user.id);
-      setPosts(userPosts);
+    if (!user) {
+      return;
     }
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const [all, bidsOnMine] = await Promise.all([
+          fetchPosts(),
+          fetchBidsOnMyPosts(),
+        ]);
+        const userPosts = all.filter((post) => post.farmerId === user.id);
+        const counts = {};
+        for (const b of bidsOnMine) {
+          counts[b.postId] = (counts[b.postId] || 0) + 1;
+        }
+        if (!cancelled) {
+          setPosts(userPosts);
+          setBidCountByPostId(counts);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          toast.error(
+            err.response?.data?.message ||
+              err.message ||
+              "Could not load your posts.",
+          );
+          setPosts([]);
+          setBidCountByPostId({});
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
   if (!user || user.role !== "farmer") {
     navigate("/dashboard");
     return null;
   }
-  const getBidCount = (postId) => {
-    const bids = JSON.parse(localStorage.getItem("vanik_bids") || "[]");
-    return bids.filter((bid) => bid.postId === postId).length;
-  };
   return jsx("div", { className: "min-h-[calc(100vh-5rem)] bg-gradient-to-b from-background to-muted/30 py-8 sm:py-12 px-4", children: jsxs("div", { className: "max-w-4xl mx-auto", children: [
     jsxs(
       Button,
@@ -59,7 +94,10 @@ function MyPosts() {
         }
       )
     ] }),
-    posts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
+    loading ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
+      jsx(Loader2, { className: "w-10 h-10 mx-auto animate-spin text-primary mb-4" }),
+      jsx("p", { className: "text-muted-foreground", children: t("common.loading") })
+    ] }) }) : posts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
       jsx("div", { className: "flex justify-center mb-4", children: jsx(FileText, { className: "w-14 h-14 sm:w-16 sm:h-16 text-muted-foreground" }) }),
       jsx("h3", { className: "text-lg sm:text-xl font-semibold mb-2", children: t("post.noPosts") }),
       jsx("p", { className: "text-sm sm:text-base text-muted-foreground mb-6", children: t("post.createFirst") }),
@@ -68,7 +106,7 @@ function MyPosts() {
         t("dashboard.createPost")
       ] })
     ] }) }) : jsx("div", { className: "grid gap-4 sm:gap-6", children: posts.map((post) => {
-      const bidCount = getBidCount(post.id);
+      const bidCount = bidCountByPostId[post.id] || 0;
       return jsx(
         Card,
         {

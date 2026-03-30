@@ -4,42 +4,70 @@ import { useApp } from "../contexts/AppContext";
 import { Card, CardContent } from "../components/ui/card";
 import { PlusCircle, FileText, Gavel, ShoppingBag, MessageSquare, Sprout } from "lucide-react";
 import { useEffect, useState } from "react";
+import { fetchPosts } from "../postsApi";
+import { fetchMyBids, fetchBidsOnMyPosts } from "../bidsApi";
 function Dashboard() {
   const navigate = useNavigate();
   const { user, t } = useApp();
   const [stats, setStats] = useState({ posts: 0, bids: 0, chats: 0 });
   useEffect(() => {
-    if (user) {
-      const posts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-      const bids = JSON.parse(localStorage.getItem("vanik_bids") || "[]");
+    if (!user) {
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      let apiPosts = [];
+      try {
+        apiPosts = await fetchPosts();
+      } catch {
+        apiPosts = [];
+      }
+      if (cancelled) {
+        return;
+      }
       const messages = JSON.parse(localStorage.getItem("vanik_messages") || "[]");
       if (user.role === "farmer") {
-        const myPosts = posts.filter((p) => p.farmerId === user.id);
-        const myBids = bids.filter(
-          (b) => myPosts.some((p) => p.id === b.postId)
-        );
+        let receivedBids = [];
+        try {
+          receivedBids = await fetchBidsOnMyPosts();
+        } catch {
+          receivedBids = [];
+        }
+        if (cancelled) {
+          return;
+        }
+        const myPosts = apiPosts.filter((p) => p.farmerId === user.id);
         const myChats = new Set(
           messages.filter((m) => m.chatId.includes(user.id)).map((m) => m.chatId)
         ).size;
         setStats({
           posts: myPosts.length,
-          bids: myBids.length,
+          bids: receivedBids.length,
           chats: myChats
         });
       } else {
-        const myBids = bids.filter((b) => b.buyerId === user.id);
-        const viewedPosts = posts.length;
+        let myBidsList = [];
+        try {
+          myBidsList = await fetchMyBids();
+        } catch {
+          myBidsList = [];
+        }
+        if (cancelled) {
+          return;
+        }
         const myChats = new Set(
           messages.filter((m) => m.chatId.includes(user.id)).map((m) => m.chatId)
         ).size;
         setStats({
-          posts: myBids.length,
-          // Reuse for bids placed
-          bids: viewedPosts,
+          posts: myBidsList.length,
+          bids: apiPosts.length,
           chats: myChats
         });
       }
-    }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
   if (!user) {
     navigate("/login");
