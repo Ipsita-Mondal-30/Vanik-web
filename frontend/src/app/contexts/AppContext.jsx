@@ -143,6 +143,9 @@ export function AppProvider({ children }) {
     setUser(null);
     localStorage.removeItem("vanik_user");
     localStorage.removeItem("vanik_token");
+    localStorage.removeItem("vanik_bids");
+    localStorage.removeItem("vanik_messages");
+    localStorage.removeItem("vanik_posts");
   };
 
   const t = (key) => translations[language][key] || key;
