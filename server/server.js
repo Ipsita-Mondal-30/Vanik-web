@@ -23,7 +23,6 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
-
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
 });
