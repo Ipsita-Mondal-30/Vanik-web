@@ -1,6 +1,7 @@
 import { jsx, jsxs } from "react/jsx-runtime";
 import { useNavigate } from "react-router";
 import { useApp } from "../contexts/AppContext";
+import api from "../api";
 import { Card, CardContent } from "../components/ui/card";
 import { PlusCircle, FileText, Gavel, ShoppingBag, MessageSquare, Sprout } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -10,34 +11,23 @@ function Dashboard() {
   const [stats, setStats] = useState({ posts: 0, bids: 0, chats: 0 });
   useEffect(() => {
     if (user) {
-      const posts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-      const bids = JSON.parse(localStorage.getItem("vanik_bids") || "[]");
-      const messages = JSON.parse(localStorage.getItem("vanik_messages") || "[]");
       if (user.role === "farmer") {
-        const myPosts = posts.filter((p) => p.farmerId === user.id);
-        const myBids = bids.filter(
-          (b) => myPosts.some((p) => p.id === b.postId)
-        );
-        const myChats = new Set(
-          messages.filter((m) => m.chatId.includes(user.id)).map((m) => m.chatId)
-        ).size;
-        setStats({
-          posts: myPosts.length,
-          bids: myBids.length,
-          chats: myChats
-        });
+        Promise.all([api.get("/api/posts"), api.get("/api/bids/farmer")])
+          .then(([postsRes, bidsRes]) => {
+            const allPosts = postsRes.data.posts || [];
+            const myPosts = allPosts.filter((p) => p.farmerId === user.id);
+            const myBids = bidsRes.data.bids || [];
+            setStats({ posts: myPosts.length, bids: myBids.length, chats: 0 });
+          })
+          .catch(() => setStats({ posts: 0, bids: 0, chats: 0 }));
       } else {
-        const myBids = bids.filter((b) => b.buyerId === user.id);
-        const viewedPosts = posts.length;
-        const myChats = new Set(
-          messages.filter((m) => m.chatId.includes(user.id)).map((m) => m.chatId)
-        ).size;
-        setStats({
-          posts: myBids.length,
-          // Reuse for bids placed
-          bids: viewedPosts,
-          chats: myChats
-        });
+        Promise.all([api.get("/api/posts"), api.get("/api/bids/buyer")])
+          .then(([postsRes, bidsRes]) => {
+            const allPosts = postsRes.data.posts || [];
+            const myBids = bidsRes.data.bids || [];
+            setStats({ posts: myBids.length, bids: allPosts.length, chats: 0 });
+          })
+          .catch(() => setStats({ posts: 0, bids: 0, chats: 0 }));
       }
     }
   }, [user]);

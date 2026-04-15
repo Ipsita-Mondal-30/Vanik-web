@@ -111,10 +111,12 @@ export function AppProvider({ children }) {
   useEffect(() => {
     const savedLang = localStorage.getItem("vanik_language");
     const savedUser = localStorage.getItem("vanik_user");
+    const savedToken = localStorage.getItem("vanik_token");
     if (savedLang && (savedLang === "en" || savedLang === "hi")) {
       setLanguageState(savedLang);
     }
-    if (savedUser) {
+    // If there is no token, treat user as logged out (we now rely on real APIs).
+    if (savedUser && savedToken) {
       try {
         setUser(JSON.parse(savedUser));
       } catch (e) {

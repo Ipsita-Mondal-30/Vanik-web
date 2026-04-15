@@ -2,31 +2,23 @@ import { jsx, jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useApp } from "../contexts/AppContext";
+import api from "../api";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, IndianRupee, MessageSquare, Target, Mail, User } from "lucide-react";
+import { ArrowLeft, IndianRupee, MessageSquare, Target, Mail, User, Loader2 } from "lucide-react";
 function Bids() {
   const navigate = useNavigate();
   const { user, t } = useApp();
   const [bidsWithPosts, setBidsWithPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (user) {
-      const posts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-      const userPosts = posts.filter((post) => post.farmerId === user.id);
-      const userPostIds = userPosts.map((p) => p.id);
-      const allBids = JSON.parse(localStorage.getItem("vanik_bids") || "[]");
-      const userBids = allBids.filter((bid) => userPostIds.includes(bid.postId));
-      const bidsWithTitles = userBids.map((bid) => {
-        const post = userPosts.find((p) => p.id === bid.postId);
-        return {
-          ...bid,
-          postTitle: post?.title || "Unknown Post"
-        };
-      });
-      bidsWithTitles.sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-      setBidsWithPosts(bidsWithTitles);
+      setLoading(true);
+      api
+        .get("/api/bids/farmer")
+        .then(({ data }) => setBidsWithPosts(data.bids || []))
+        .catch(() => setBidsWithPosts([]))
+        .finally(() => setLoading(false));
     }
   }, [user]);
   if (!user || user.role !== "farmer") {
@@ -57,7 +49,7 @@ function Bids() {
         jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "All bids on your posts" })
       ] })
     ] }),
-    bidsWithPosts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
+    loading ? jsx(Card, { children: jsx(CardContent, { className: "p-10 sm:p-14 flex items-center justify-center", children: jsx(Loader2, { className: "w-8 h-8 animate-spin text-primary" }) }) }) : bidsWithPosts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
       jsx("div", { className: "flex justify-center mb-4", children: jsx(Mail, { className: "w-14 h-14 sm:w-16 sm:h-16 text-muted-foreground" }) }),
       jsx("h3", { className: "text-lg sm:text-xl font-semibold mb-2", children: t("bid.noBids") }),
       jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Wait for buyers to place bids on your posts" })
