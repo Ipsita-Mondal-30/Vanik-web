@@ -2,49 +2,23 @@ import { jsx, jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useApp } from "../contexts/AppContext";
+import api from "../api";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, MessageSquare, MessageCircle, Sprout, ShoppingBag } from "lucide-react";
+import { ArrowLeft, MessageSquare, MessageCircle, Sprout, ShoppingBag, Loader2 } from "lucide-react";
 function Messages() {
   const navigate = useNavigate();
   const { user, t } = useApp();
   const [chats, setChats] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (user) {
-      const allMessages = JSON.parse(localStorage.getItem("vanik_messages") || "[]");
-      const chatMap = new Map();
-      allMessages.forEach((msg) => {
-        if (msg.chatId.includes(user.id)) {
-          if (!chatMap.has(msg.chatId)) {
-            chatMap.set(msg.chatId, []);
-          }
-          chatMap.get(msg.chatId).push(msg);
-        }
-      });
-      const bids = JSON.parse(localStorage.getItem("vanik_bids") || "[]");
-      const chatPreviews = [];
-      chatMap.forEach((messages, chatId) => {
-        messages.sort(
-          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        const lastMessage = messages[0];
-        const otherUserId = chatId.split("-").find((id) => id !== user.id) || "";
-        const bid = bids.find(
-          (b) => b.buyerId === otherUserId || b.farmerId === otherUserId
-        );
-        chatPreviews.push({
-          chatId,
-          otherUserId,
-          otherUserName: bid?.buyerName || bid?.farmerName || "User",
-          otherUserRole: bid?.buyerId === otherUserId ? "buyer" : "farmer",
-          lastMessage: lastMessage.text,
-          lastMessageTime: lastMessage.createdAt
-        });
-      });
-      chatPreviews.sort(
-        (a, b) => new Date(b.lastMessageTime).getTime() - new Date(a.lastMessageTime).getTime()
-      );
-      setChats(chatPreviews);
+      setLoading(true);
+      api
+        .get("/api/messages/inbox")
+        .then(({ data }) => setChats(data.chats || []))
+        .catch(() => setChats([]))
+        .finally(() => setLoading(false));
     }
   }, [user]);
   if (!user) {
@@ -72,7 +46,7 @@ function Messages() {
         jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Your conversations" })
       ] })
     ] }),
-    chats.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
+    loading ? jsx(Card, { children: jsx(CardContent, { className: "p-10 sm:p-14 flex items-center justify-center", children: jsx(Loader2, { className: "w-8 h-8 animate-spin text-primary" }) }) }) : chats.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
       jsx("div", { className: "flex justify-center mb-4", children: jsx(MessageCircle, { className: "w-14 h-14 sm:w-16 sm:h-16 text-muted-foreground" }) }),
       jsx("h3", { className: "text-lg sm:text-xl font-semibold mb-2", children: "No messages yet" }),
       jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Start chatting with buyers or farmers" })
@@ -80,7 +54,7 @@ function Messages() {
       Card,
       {
         className: "cursor-pointer hover:shadow-lg transition-all",
-        onClick: () => navigate(`/chat/${chat.otherUserId}`),
+        onClick: () => navigate(`/chat/${chat.otherUserId}?bidId=${chat.bidId}`),
         children: jsx(CardContent, { className: "p-4 sm:p-6", children: jsxs("div", { className: "flex items-center gap-3 sm:gap-4", children: [
           jsx("div", { className: "bg-muted rounded-full p-2.5 flex items-center justify-center shrink-0", children: chat.otherUserRole === "buyer" ? jsx(ShoppingBag, { className: "w-6 h-6 sm:w-7 sm:h-7 text-secondary" }) : jsx(Sprout, { className: "w-6 h-6 sm:w-7 sm:h-7 text-primary" }) }),
           jsxs("div", { className: "flex-1 min-w-0", children: [
@@ -93,7 +67,7 @@ function Messages() {
           ] })
         ] }) })
       },
-      chat.chatId
+      chat.bidId
     )) })
   ] }) });
 }
