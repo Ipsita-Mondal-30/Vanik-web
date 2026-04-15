@@ -2,17 +2,24 @@ import { jsx, jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useApp } from "../contexts/AppContext";
+import api from "../api";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, IndianRupee, ShoppingCart, Mail, Sprout, ArrowRight } from "lucide-react";
+import { ArrowLeft, IndianRupee, ShoppingCart, Mail, Sprout, ArrowRight, Loader2 } from "lucide-react";
 function BrowsePosts() {
   const navigate = useNavigate();
   const { user, t } = useApp();
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    const savedPosts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-    setPosts(savedPosts);
-  }, []);
+    if (!user) return;
+    setLoading(true);
+    api
+      .get("/api/posts")
+      .then(({ data }) => setPosts(data.posts || []))
+      .catch(() => setPosts([]))
+      .finally(() => setLoading(false));
+  }, [user]);
   if (!user) {
     navigate("/login");
     return null;
@@ -38,7 +45,7 @@ function BrowsePosts() {
         jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Find crops and services" })
       ] })
     ] }),
-    posts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
+    loading ? jsx(Card, { children: jsx(CardContent, { className: "p-10 sm:p-14 flex items-center justify-center", children: jsx(Loader2, { className: "w-8 h-8 animate-spin text-primary" }) }) }) : posts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
       jsx("div", { className: "flex justify-center mb-4", children: jsx(Mail, { className: "w-14 h-14 sm:w-16 sm:h-16 text-muted-foreground" }) }),
       jsx("h3", { className: "text-lg sm:text-xl font-semibold mb-2", children: t("post.noPosts") }),
       jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Check back later for new posts" })

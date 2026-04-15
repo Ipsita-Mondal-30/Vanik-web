@@ -2,11 +2,12 @@ import { jsx, jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useApp } from "../contexts/AppContext";
+import api from "../api";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, IndianRupee, User, Mail } from "lucide-react";
+import { ArrowLeft, IndianRupee, User, Mail, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 function PostDetails() {
   const { id } = useParams();
@@ -14,16 +15,23 @@ function PostDetails() {
   const { user, t } = useApp();
   const [post, setPost] = useState(null);
   const [bidAmount, setBidAmount] = useState("");
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (id) {
-      const posts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-      const foundPost = posts.find((p) => p.id === id);
-      setPost(foundPost || null);
+      setLoading(true);
+      api
+        .get(`/api/posts/${id}`)
+        .then(({ data }) => setPost(data.post || null))
+        .catch(() => setPost(null))
+        .finally(() => setLoading(false));
     }
   }, [id]);
   if (!user) {
     navigate("/login");
     return null;
+  }
+  if (loading) {
+    return jsx("div", { className: "min-h-[calc(100vh-5rem)] flex items-center justify-center", children: jsx(Loader2, { className: "w-8 h-8 animate-spin text-primary" }) });
   }
   if (!post) {
     return jsx("div", { className: "min-h-[calc(100vh-5rem)] flex items-center justify-center", children: jsxs("div", { className: "text-center", children: [
@@ -31,25 +39,22 @@ function PostDetails() {
       jsx("h3", { className: "text-xl font-semibold", children: "Post not found" })
     ] }) });
   }
-  const handlePlaceBid = (e) => {
+  const handlePlaceBid = async (e) => {
     e.preventDefault();
     if (!bidAmount || parseFloat(bidAmount) <= 0) {
       toast.error("Please enter a valid bid amount");
       return;
     }
-    const bids = JSON.parse(localStorage.getItem("vanik_bids") || "[]");
-    const newBid = {
-      id: Date.now().toString(),
-      postId: post.id,
-      buyerId: user.id,
-      buyerName: user.name,
-      amount: bidAmount,
-      createdAt: (new Date()).toISOString()
-    };
-    bids.push(newBid);
-    localStorage.setItem("vanik_bids", JSON.stringify(bids));
-    toast.success("Bid placed successfully!");
-    setBidAmount("");
+    try {
+      await api.post("/api/bids", {
+        postId: post.id,
+        amount: bidAmount
+      });
+      toast.success("Bid placed successfully!");
+      setBidAmount("");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Could not place bid");
+    }
   };
   const isFarmer = user.role === "farmer";
   const isOwnPost = post.farmerId === user.id;

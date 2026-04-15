@@ -1,11 +1,10 @@
 import { Router } from "express";
+import { sendMessage, getMessages } from "../controllers/messageController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
-import { listMessagesByBid, createMessage } from "../controllers/messageController.js";
 
 const router = Router();
 
-router.get("/:bidId", authMiddleware, listMessagesByBid);
-router.post("/", authMiddleware, createMessage);
+router.post("/", authMiddleware, sendMessage);
+router.get("/:bidId", authMiddleware, getMessages);
 
 export default router;
-

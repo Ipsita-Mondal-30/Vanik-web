@@ -2,12 +2,14 @@ import { jsx, jsxs } from "react/jsx-runtime";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useApp } from "../contexts/AppContext";
+import api from "../api";
+import { toast } from "sonner";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, FileText } from "lucide-react";
+import { ArrowLeft, FileText, Loader2 } from "lucide-react";
 function CreatePost() {
   const navigate = useNavigate();
   const { user, t } = useApp();
@@ -16,26 +18,30 @@ function CreatePost() {
     description: "",
     price: ""
   });
+  const [loading, setLoading] = useState(false);
   if (!user || user.role !== "farmer") {
     navigate("/dashboard");
     return null;
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title || !formData.description) {
       return;
     }
-    const posts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-    const newPost = {
-      id: Date.now().toString(),
-      ...formData,
-      farmerId: user.id,
-      farmerName: user.name,
-      createdAt: (new Date()).toISOString()
-    };
-    posts.push(newPost);
-    localStorage.setItem("vanik_posts", JSON.stringify(posts));
-    navigate("/my-posts");
+    setLoading(true);
+    try {
+      await api.post("/api/posts", {
+        title: formData.title,
+        description: formData.description,
+        price: formData.price
+      });
+      toast.success("Post created");
+      navigate("/my-posts");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Could not create post");
+    } finally {
+      setLoading(false);
+    }
   };
   return jsx("div", { className: "min-h-[calc(100vh-5rem)] bg-gradient-to-b from-background to-muted/30 py-8 sm:py-12 px-4", children: jsxs("div", { className: "max-w-2xl mx-auto", children: [
     jsxs(
@@ -120,7 +126,11 @@ function CreatePost() {
             type: "submit",
             size: "lg",
             className: "w-full h-12 sm:h-14 text-base sm:text-lg",
-            children: t("post.submit")
+            disabled: loading,
+            children: loading ? jsxs("span", { className: "inline-flex items-center gap-2", children: [
+              jsx(Loader2, { className: "w-5 h-5 animate-spin" }),
+              t("common.loading")
+            ] }) : t("post.submit")
           }
         )
       ] })

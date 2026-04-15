@@ -1,61 +1,60 @@
 import { Message } from "../models/Message.js";
-import { User } from "../models/User.js";
+import { formatMessage } from "../utils/messageFormat.js";
 
-function requireString(value, field) {
-  if (!value || typeof value !== "string" || !value.trim()) {
-    const err = new Error(`${field} is required`);
-    err.statusCode = 400;
-    throw err;
+function validateMessageBody(body) {
+  const errors = [];
+  const { bidId, text } = body;
+  if (!bidId || typeof bidId !== "string" || !bidId.trim()) {
+    errors.push("bidId is required");
   }
-  return value.trim();
-}
-
-export async function listMessagesByBid(req, res) {
-  const bidId = requireString(req.params.bidId, "bidId");
-
-  const messages = await Message.find({ bidId })
-    .sort({ createdAt: 1 })
-    .limit(500)
-    .populate("senderId", "name role")
-    .lean();
-
-  return res.json({
-    messages: messages.map((m) => ({
-      id: m._id.toString(),
-      bidId: m.bidId,
-      senderId: m.senderId?._id?.toString?.() || m.senderId?.toString?.(),
-      senderName: m.senderId?.name || "User",
-      text: m.text,
-      createdAt: m.createdAt,
-    })),
-  });
-}
-
-export async function createMessage(req, res) {
-  const bidId = requireString(req.body?.bidId, "bidId");
-  const text = requireString(req.body?.text, "text");
-
-  const sender = await User.findById(req.user.userId).select("name role").lean();
-  if (!sender) {
-    return res.status(401).json({ message: "Invalid token" });
+  if (!text || typeof text !== "string" || !text.trim()) {
+    errors.push("Message text is required");
   }
-
-  const message = await Message.create({
-    bidId,
-    senderId: req.user.userId,
-    text,
-    createdAt: new Date(),
-  });
-
-  return res.status(201).json({
-    message: {
-      id: message._id.toString(),
-      bidId,
-      senderId: req.user.userId,
-      senderName: sender.name,
-      text,
-      createdAt: message.createdAt,
-    },
-  });
+  return errors;
 }
 
+export async function sendMessage(req, res) {
+  try {
+    const errors = validateMessageBody(req.body);
+    if (errors.length) {
+      return res.status(400).json({ message: errors[0], errors });
+    }
+    const { bidId, text } = req.body;
+    const senderId = req.user.userId;
+
+    const message = await Message.create({
+      bidId: bidId.trim(),
+      senderId,
+      text: text.trim(),
+    });
+
+    const populated = await Message.findById(message._id).populate(
+      "senderId",
+      "name role",
+    );
+
+    return res.status(201).json({ message: formatMessage(populated) });
+  } catch (err) {
+    console.error("sendMessage error:", err);
+    return res.status(500).json({ message: "Could not send message" });
+  }
+}
+
+export async function getMessages(req, res) {
+  try {
+    const { bidId } = req.params;
+    if (!bidId || !bidId.trim()) {
+      return res.status(400).json({ message: "bidId is required" });
+    }
+
+    const list = await Message.find({ bidId: bidId.trim() })
+      .sort({ createdAt: 1 })
+      .populate("senderId", "name role");
+
+    const messages = list.map(formatMessage);
+    return res.json({ messages });
+  } catch (err) {
+    console.error("getMessages error:", err);
+    return res.status(500).json({ message: "Could not load messages" });
+  }
+}
