@@ -151,3 +151,13 @@ export async function getInbox(req, res) {
     return res.status(500).json({ message: "Could not load inbox" });
   }
 }
+
+// Compatibility exports (some branches used these names).
+// Keep behavior identical to the existing, access-controlled handlers above.
+export async function listMessagesByBid(req, res) {
+  return getMessages(req, res);
+}
+
+export async function createMessage(req, res) {
+  return sendMessage(req, res);
+}
