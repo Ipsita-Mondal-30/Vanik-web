@@ -12,20 +12,38 @@ function Dashboard() {
   useEffect(() => {
     if (user) {
       if (user.role === "farmer") {
-        Promise.all([api.get("/api/posts"), api.get("/api/bids/farmer")])
-          .then(([postsRes, bidsRes]) => {
+        Promise.all([
+          api.get("/api/posts"),
+          api.get("/api/bids/farmer"),
+          api.get("/api/messages/inbox"),
+        ])
+          .then(([postsRes, bidsRes, inboxRes]) => {
             const allPosts = postsRes.data.posts || [];
             const myPosts = allPosts.filter((p) => p.farmerId === user.id);
             const myBids = bidsRes.data.bids || [];
-            setStats({ posts: myPosts.length, bids: myBids.length, chats: 0 });
+            const chats = inboxRes.data.chats || [];
+            setStats({
+              posts: myPosts.length,
+              bids: myBids.length,
+              chats: chats.length,
+            });
           })
           .catch(() => setStats({ posts: 0, bids: 0, chats: 0 }));
       } else {
-        Promise.all([api.get("/api/posts"), api.get("/api/bids/buyer")])
-          .then(([postsRes, bidsRes]) => {
+        Promise.all([
+          api.get("/api/posts"),
+          api.get("/api/bids/buyer"),
+          api.get("/api/messages/inbox"),
+        ])
+          .then(([postsRes, bidsRes, inboxRes]) => {
             const allPosts = postsRes.data.posts || [];
             const myBids = bidsRes.data.bids || [];
-            setStats({ posts: myBids.length, bids: allPosts.length, chats: 0 });
+            const chats = inboxRes.data.chats || [];
+            setStats({
+              posts: myBids.length,
+              bids: allPosts.length,
+              chats: chats.length,
+            });
           })
           .catch(() => setStats({ posts: 0, bids: 0, chats: 0 }));
       }
@@ -55,6 +73,13 @@ function Dashboard() {
       title: t("dashboard.viewBids"),
       description: "Check bids on posts",
       path: "/bids",
+      color: "bg-secondary"
+    },
+    {
+      icon: MessageSquare,
+      title: t("bid.chat"),
+      description: "Messages",
+      path: "/messages",
       color: "bg-secondary"
     }
   ];
@@ -97,13 +122,23 @@ function Dashboard() {
     ] }) }),
     jsx("div", { className: "grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3", children: actions.map((action, index) => {
       const Icon = action.icon;
+      const showChatBadge = action.path === "/messages" && stats.chats > 0;
       return jsx(
         Card,
         {
           className: "cursor-pointer hover:shadow-xl transition-all hover:-translate-y-1 border-2 hover:border-primary/50",
           onClick: () => navigate(action.path),
           children: jsxs(CardContent, { className: "p-6 sm:p-8", children: [
-            jsx("div", { className: `${action.color} rounded-xl p-3 sm:p-4 w-fit mb-4 sm:mb-6`, children: jsx(Icon, { className: "w-8 h-8 sm:w-10 sm:h-10 text-white" }) }),
+            jsxs("div", { className: "relative w-fit mb-4 sm:mb-6", children: [
+              jsx("div", { className: `${action.color} rounded-xl p-3 sm:p-4`, children: jsx(Icon, { className: "w-8 h-8 sm:w-10 sm:h-10 text-white" }) }),
+              showChatBadge && jsx(
+                "span",
+                {
+                  className: "absolute -top-2 -right-2 min-w-6 h-6 px-1 rounded-full bg-destructive text-white text-xs font-bold flex items-center justify-center",
+                  children: stats.chats > 99 ? "99+" : stats.chats
+                }
+              )
+            ] }),
             jsx("h3", { className: "text-lg sm:text-xl font-bold mb-2", children: action.title }),
             jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: action.description })
           ] })

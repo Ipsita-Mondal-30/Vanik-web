@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { Message } from "../models/Message.js";
 import { formatMessage } from "../utils/messageFormat.js";
+import { Bid } from "../models/Bid.js";
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
@@ -35,9 +36,33 @@ export function setupChatSocket(io) {
   });
 
   io.on("connection", (socket) => {
-    socket.on("join_bid", ({ bidId }) => {
-      if (!bidId || typeof bidId !== "string" || !bidId.trim()) return;
-      socket.join(`bid:${bidId.trim()}`);
+    socket.on("join_bid", async ({ bidId }, ack) => {
+      try {
+        if (!bidId || typeof bidId !== "string" || !bidId.trim()) return;
+        const bid = await Bid.findById(bidId.trim()).populate({
+          path: "postId",
+          select: "farmerId",
+        });
+        if (!bid || !bid.postId) {
+          ack?.({ ok: false, error: "Bid not found" });
+          return;
+        }
+        const farmerId = bid.postId.farmerId.toString();
+        const buyerId = bid.buyerId.toString();
+        const isMember = socket.userId === farmerId || socket.userId === buyerId;
+        if (!isMember) {
+          ack?.({ ok: false, error: "Forbidden" });
+          return;
+        }
+        if (bid.status !== "accepted") {
+          ack?.({ ok: false, error: "Chat is not active for this bid" });
+          return;
+        }
+        socket.join(`bid:${bidId.trim()}`);
+        ack?.({ ok: true });
+      } catch (err) {
+        ack?.({ ok: false, error: "Could not join chat" });
+      }
     });
 
     socket.on("leave_bid", ({ bidId }) => {
@@ -54,6 +79,26 @@ export function setupChatSocket(io) {
         }
         if (!text || typeof text !== "string" || !text.trim()) {
           ack?.({ ok: false, error: "text required" });
+          return;
+        }
+
+        const bid = await Bid.findById(bidId.trim()).populate({
+          path: "postId",
+          select: "farmerId",
+        });
+        if (!bid || !bid.postId) {
+          ack?.({ ok: false, error: "Bid not found" });
+          return;
+        }
+        const farmerId = bid.postId.farmerId.toString();
+        const buyerId = bid.buyerId.toString();
+        const isMember = socket.userId === farmerId || socket.userId === buyerId;
+        if (!isMember) {
+          ack?.({ ok: false, error: "Forbidden" });
+          return;
+        }
+        if (bid.status !== "accepted") {
+          ack?.({ ok: false, error: "Chat is not active for this bid" });
           return;
         }
 

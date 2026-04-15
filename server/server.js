@@ -13,6 +13,7 @@ process.on("unhandledRejection", (err) => {
 });
 import postRoutes from "./routes/postRoutes.js";
 import bidRoutes from "./routes/bidRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 import { setupChatSocket } from "./socket/chatSocket.js";
 
 const app = express();
@@ -36,7 +37,7 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/assistant", assistantRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/bids", bidRoutes);
-app.use("/api/assistant", assistantRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
