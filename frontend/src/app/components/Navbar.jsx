@@ -1,20 +1,63 @@
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { Link, useLocation, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
 import { useApp } from "../contexts/AppContext";
+import api from "../api";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Sprout, ShoppingBag, LogOut, Globe, Sparkles } from "lucide-react";
+import {
+  Sprout,
+  ShoppingBag,
+  LogOut,
+  Globe,
+  Bell,
+  Check,
+  Sparkles,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 function Navbar() {
   const { language, setLanguage, user, logout, t } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notifications, setNotifications] = useState([]);
+
   if (location.pathname === "/" && !user) {
     return null;
   }
+
+  useEffect(() => {
+    if (!user) return;
+    api
+      .get("/api/notifications")
+      .then(({ data }) => {
+        setUnreadCount(data.unreadCount || 0);
+        setNotifications(data.notifications || []);
+      })
+      .catch(() => {});
+  }, [user, location.pathname]);
+
   const handleLogout = () => {
     logout();
     navigate("/");
   };
+
+  const markAllRead = async () => {
+    try {
+      await api.post("/api/notifications/read-all");
+      setUnreadCount(0);
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    } catch {
+      // ignore
+    }
+  };
+
   return jsx("nav", { className: "bg-white border-b border-border shadow-sm sticky top-0 z-50", children: jsx("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: jsxs("div", { className: "flex justify-between items-center h-16 sm:h-20", children: [
     jsxs(Link, { to: user ? "/dashboard" : "/", className: "flex items-center gap-2 sm:gap-3", children: [
       jsx("div", { className: "bg-primary rounded-full p-2 sm:p-2.5", children: jsx(Sprout, { className: "w-6 h-6 sm:w-7 sm:h-7 text-white" }) }),
@@ -35,6 +78,44 @@ function Navbar() {
           ]
         }
       ),
+      user && jsx(DropdownMenu, { children: jsxs(Fragment, { children: [
+        jsx(DropdownMenuTrigger, { asChild: true, children: jsxs(
+          Button,
+          {
+            variant: "outline",
+            size: "icon",
+            className: "relative",
+            children: [
+              jsx(Bell, { className: "w-4 h-4" }),
+              unreadCount > 0 && jsx("span", { className: "absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-destructive text-white text-[10px] font-bold flex items-center justify-center", children: unreadCount > 99 ? "99+" : unreadCount })
+            ]
+          }
+        ) }),
+        jsx(DropdownMenuContent, { align: "end", className: "w-80", children: notifications.length === 0 ? jsx("div", { className: "px-3 py-6 text-sm text-muted-foreground text-center", children: "No notifications" }) : jsxs(Fragment, { children: [
+          jsx(DropdownMenuItem, { onSelect: (e) => e.preventDefault(), className: "flex items-center justify-between", children: jsxs("div", { className: "flex items-center justify-between w-full", children: [
+            jsx("span", { className: "text-sm font-medium", children: "Notifications" }),
+            unreadCount > 0 && jsxs(Button, { variant: "ghost", size: "sm", onClick: markAllRead, className: "h-8", children: [
+              jsx(Check, { className: "w-4 h-4 mr-1.5" }),
+              "Mark all read"
+            ] })
+          ] }) }),
+          jsx(DropdownMenuSeparator, {}),
+          notifications.slice(0, 8).map((n) => jsx(
+            DropdownMenuItem,
+            {
+              onSelect: () => {
+                if (n.data?.bidId) navigate(`/messages`);
+              },
+              className: `flex flex-col items-start gap-0.5 ${n.read ? "opacity-70" : ""}`,
+              children: [
+                jsx("div", { className: "text-sm font-medium", children: n.title }),
+                jsx("div", { className: "text-xs text-muted-foreground", children: n.message })
+              ]
+            },
+            n.id
+          ))
+        ] }) })
+      ] }) }),
       user && jsxs(Fragment, { children: [
         jsx(
           Button,
