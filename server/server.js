@@ -15,6 +15,11 @@ import postRoutes from "./routes/postRoutes.js";
 import bidRoutes from "./routes/bidRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import { setupChatSocket } from "./socket/chatSocket.js";
+import assistantRoutes from "./routes/assistantRoutes.js";
+
+process.on("unhandledRejection", (err) => {
+  console.error("UNHANDLED:", err);
+});
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -39,6 +44,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/bids", bidRoutes);
 app.use("/api/notifications", notificationRoutes);
 
+app.use("/api/assistant", assistantRoutes);
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
 });
