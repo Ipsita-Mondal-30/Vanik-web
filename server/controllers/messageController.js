@@ -2,6 +2,22 @@ import { Message } from "../models/Message.js";
 import { formatMessage } from "../utils/messageFormat.js";
 import { Bid } from "../models/Bid.js";
 
+async function ensureAcceptedMember(bidId, userId) {
+  const bid = await Bid.findById(bidId).populate({
+    path: "postId",
+    select: "farmerId",
+  });
+  if (!bid || !bid.postId) return { ok: false, status: 404, message: "Bid not found" };
+  const farmerId = bid.postId.farmerId.toString();
+  const buyerId = bid.buyerId.toString();
+  const isMember = userId === farmerId || userId === buyerId;
+  if (!isMember) return { ok: false, status: 403, message: "Forbidden" };
+  if (bid.status !== "accepted") {
+    return { ok: false, status: 403, message: "Chat is not active for this bid" };
+  }
+  return { ok: true };
+}
+
 function validateMessageBody(body) {
   const errors = [];
   const { bidId, text } = body;
@@ -22,6 +38,11 @@ export async function sendMessage(req, res) {
     }
     const { bidId, text } = req.body;
     const senderId = req.user.userId;
+
+    const allowed = await ensureAcceptedMember(bidId.trim(), senderId);
+    if (!allowed.ok) {
+      return res.status(allowed.status).json({ message: allowed.message });
+    }
 
     const message = await Message.create({
       bidId: bidId.trim(),
@@ -48,6 +69,11 @@ export async function getMessages(req, res) {
       return res.status(400).json({ message: "bidId is required" });
     }
 
+    const allowed = await ensureAcceptedMember(bidId.trim(), req.user.userId);
+    if (!allowed.ok) {
+      return res.status(allowed.status).json({ message: allowed.message });
+    }
+
     const list = await Message.find({ bidId: bidId.trim() })
       .sort({ createdAt: 1 })
       .populate("senderId", "name role");
@@ -65,7 +91,7 @@ export async function getInbox(req, res) {
     const userId = req.user.userId;
 
     // Find bids where the user is involved (buyer) OR (farmer via post)
-    const bids = await Bid.find({ buyerId: userId })
+    const bids = await Bid.find({ buyerId: userId, status: "accepted" })
       .populate("buyerId", "name role")
       .populate({
         path: "postId",
@@ -74,7 +100,7 @@ export async function getInbox(req, res) {
       });
 
     // Also include farmer-side bids by scanning posts they own
-    const farmerBids = await Bid.find({})
+    const farmerBids = await Bid.find({ status: "accepted" })
       .populate("buyerId", "name role")
       .populate({
         path: "postId",
@@ -93,7 +119,6 @@ export async function getInbox(req, res) {
         const last = await Message.findOne({ bidId: bid._id.toString() })
           .sort({ createdAt: -1 })
           .populate("senderId", "name role");
-        if (!last) return null;
 
         const buyer = bid.buyerId;
         const farmer = bid.postId?.farmerId;
@@ -108,8 +133,8 @@ export async function getInbox(req, res) {
           otherUserId: other?._id?.toString?.() ?? "",
           otherUserName: other?.name ?? "User",
           otherUserRole: other?.role ?? otherRole,
-          lastMessage: last.text,
-          lastMessageTime: last.createdAt,
+          lastMessage: last ? last.text : "Chat started",
+          lastMessageTime: last ? last.createdAt : bid.acceptedAt ?? bid.createdAt,
         };
       }),
     );

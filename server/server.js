@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import bidRoutes from "./routes/bidRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 import { setupChatSocket } from "./socket/chatSocket.js";
 
 const app = express();
@@ -30,6 +31,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/bids", bidRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });

@@ -5,12 +5,14 @@ import { useApp } from "../contexts/AppContext";
 import api from "../api";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, IndianRupee, MessageSquare, Target, Mail, User, Loader2 } from "lucide-react";
+import { ArrowLeft, IndianRupee, MessageSquare, Target, Mail, User, Loader2, Check, X } from "lucide-react";
+import { toast } from "sonner";
 function Bids() {
   const navigate = useNavigate();
   const { user, t } = useApp();
   const [bidsWithPosts, setBidsWithPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [updatingId, setUpdatingId] = useState(null);
   useEffect(() => {
     if (user) {
       setLoading(true);
@@ -27,6 +29,18 @@ function Bids() {
   }
   const handleChat = (bid) => {
     navigate(`/chat/${bid.buyerId}?bidId=${bid.id}`);
+  };
+  const updateStatus = async (bidId, action) => {
+    setUpdatingId(bidId);
+    try {
+      const { data } = await api.post(`/api/bids/${bidId}/${action}`);
+      setBidsWithPosts((prev) => prev.map((b) => (b.id === bidId ? data.bid : b)));
+      toast.success(action === "accept" ? "Bid accepted" : "Bid rejected");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Could not update bid");
+    } finally {
+      setUpdatingId(null);
+    }
   };
   return jsx("div", { className: "min-h-[calc(100vh-5rem)] bg-gradient-to-b from-background to-muted/30 py-8 sm:py-12 px-4", children: jsxs("div", { className: "max-w-4xl mx-auto", children: [
     jsxs(
@@ -71,7 +85,35 @@ function Bids() {
             bid.amount
           ] })
         ] }),
-        jsxs(
+        bid.status === "pending" ? jsxs("div", { className: "flex gap-2", children: [
+          jsx(
+            Button,
+            {
+              onClick: () => updateStatus(bid.id, "accept"),
+              size: "lg",
+              disabled: updatingId === bid.id,
+              className: "h-12",
+              children: jsxs("span", { className: "inline-flex items-center", children: [
+                jsx(Check, { className: "w-5 h-5 mr-2" }),
+                "Accept"
+              ] })
+            }
+          ),
+          jsx(
+            Button,
+            {
+              onClick: () => updateStatus(bid.id, "reject"),
+              size: "lg",
+              variant: "outline",
+              disabled: updatingId === bid.id,
+              className: "h-12",
+              children: jsxs("span", { className: "inline-flex items-center", children: [
+                jsx(X, { className: "w-5 h-5 mr-2" }),
+                "Reject"
+              ] })
+            }
+          )
+        ] }) : bid.status === "accepted" ? jsxs(
           Button,
           {
             onClick: () => handleChat(bid),
@@ -82,7 +124,7 @@ function Bids() {
               t("bid.chat")
             ]
           }
-        )
+        ) : jsx("div", { className: "text-sm text-muted-foreground", children: "Rejected" })
       ] })
     ] }) }) }, bid.id)) })
   ] }) });

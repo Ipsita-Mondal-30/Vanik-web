@@ -12,7 +12,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { FarmingIllustration } from "../components/FarmingIllustration";
-import { DemoNotice } from "../components/DemoNotice";
 function Landing() {
   const navigate = useNavigate();
   const { t, language, setLanguage } = useApp();
@@ -30,7 +29,6 @@ function Landing() {
         ]
       }
     ) }),
-    jsx("div", { className: "mb-6 sm:mb-8", children: jsx(DemoNotice, {}) }),
     jsxs("div", { className: "text-center mb-8 sm:mb-12", children: [
       jsx("div", { className: "mb-6 sm:mb-8", children: jsx(FarmingIllustration, {}) }),
       jsx("h1", { className: "text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6", children: "Vanik" }),
