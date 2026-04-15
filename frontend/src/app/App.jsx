@@ -14,6 +14,7 @@ import { Bids } from "./pages/Bids";
 import { MyBids } from "./pages/MyBids";
 import { Chat } from "./pages/Chat";
 import { Messages } from "./pages/Messages";
+import { Assistant } from "./pages/Assistant";
 import { NotFound } from "./pages/NotFound";
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
             <Route path="my-bids" element={<MyBids />} />
             <Route path="chat/:userId" element={<Chat />} />
             <Route path="messages" element={<Messages />} />
+            <Route path="assistant" element={<Assistant />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

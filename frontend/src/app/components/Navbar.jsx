@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { useApp } from "../contexts/AppContext";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Sprout, ShoppingBag, LogOut, Globe } from "lucide-react";
+import { Sprout, ShoppingBag, LogOut, Globe, Sparkles } from "lucide-react";
 function Navbar() {
   const { language, setLanguage, user, logout, t } = useApp();
   const location = useLocation();
@@ -36,6 +36,19 @@ function Navbar() {
         }
       ),
       user && jsxs(Fragment, { children: [
+        jsx(
+          Button,
+          {
+            asChild: true,
+            variant: "outline",
+            size: "sm",
+            className: "flex items-center gap-1.5 sm:gap-2 h-9 sm:h-10 px-2.5 sm:px-3",
+            children: jsxs(Link, { to: "/assistant", children: [
+              jsx(Sparkles, { className: "w-4 h-4" }),
+              jsx("span", { className: "hidden sm:inline", children: "Assistant" })
+            ] })
+          }
+        ),
         jsxs(
           Badge,
           {

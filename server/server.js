@@ -4,6 +4,11 @@ import cors from "cors";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import assistantRoutes from "./routes/assistantRoutes.js";
+
+process.on("unhandledRejection", (err) => {
+  console.error("UNHANDLED:", err);
+});
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +28,7 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/assistant", assistantRoutes);
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
 });
