@@ -2,30 +2,23 @@ import { jsx, jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useApp } from "../contexts/AppContext";
+import api from "../api";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
-import { ArrowLeft, IndianRupee, Eye, Target, Mail, Sprout } from "lucide-react";
+import { ArrowLeft, IndianRupee, Eye, Target, Mail, Sprout, MessageSquare, Loader2 } from "lucide-react";
 function MyBids() {
   const navigate = useNavigate();
   const { user, t } = useApp();
   const [bidsWithPosts, setBidsWithPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (user) {
-      const allBids = JSON.parse(localStorage.getItem("vanik_bids") || "[]");
-      const userBids = allBids.filter((bid) => bid.buyerId === user.id);
-      const posts = JSON.parse(localStorage.getItem("vanik_posts") || "[]");
-      const bidsWithInfo = userBids.map((bid) => {
-        const post = posts.find((p) => p.id === bid.postId);
-        return {
-          ...bid,
-          postTitle: post?.title || "Unknown Post",
-          farmerName: post?.farmerName || "Unknown Farmer"
-        };
-      });
-      bidsWithInfo.sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-      setBidsWithPosts(bidsWithInfo);
+      setLoading(true);
+      api
+        .get("/api/bids/buyer")
+        .then(({ data }) => setBidsWithPosts(data.bids || []))
+        .catch(() => setBidsWithPosts([]))
+        .finally(() => setLoading(false));
     }
   }, [user]);
   if (!user || user.role !== "buyer") {
@@ -53,7 +46,7 @@ function MyBids() {
         jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Track your bids" })
       ] })
     ] }),
-    bidsWithPosts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
+    loading ? jsx(Card, { children: jsx(CardContent, { className: "p-10 sm:p-14 flex items-center justify-center", children: jsx(Loader2, { className: "w-8 h-8 animate-spin text-primary" }) }) }) : bidsWithPosts.length === 0 ? jsx(Card, { children: jsxs(CardContent, { className: "p-8 sm:p-12 text-center", children: [
       jsx("div", { className: "flex justify-center mb-4", children: jsx(Mail, { className: "w-14 h-14 sm:w-16 sm:h-16 text-muted-foreground" }) }),
       jsx("h3", { className: "text-lg sm:text-xl font-semibold mb-2", children: t("bid.noBids") }),
       jsx("p", { className: "text-sm sm:text-base text-muted-foreground mb-6", children: "Start bidding on posts" }),
@@ -88,6 +81,19 @@ function MyBids() {
             children: [
               jsx(Eye, { className: "w-5 h-5 mr-2" }),
               "View Post"
+            ]
+          }
+        )
+        ,
+        bid.farmerId && jsxs(
+          Button,
+          {
+            onClick: () => navigate(`/chat/${bid.farmerId}?bidId=${bid.id}`),
+            size: "lg",
+            className: "h-full",
+            children: [
+              jsx(MessageSquare, { className: "w-5 h-5 mr-2" }),
+              t("bid.chat")
             ]
           }
         )

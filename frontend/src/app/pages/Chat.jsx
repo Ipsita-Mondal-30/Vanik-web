@@ -1,12 +1,27 @@
 import { Fragment, useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { toast } from "sonner";
+import { io } from "socket.io-client";
 import { Loader2, ArrowLeft, Send, MessageCircle, Sprout, ShoppingBag } from "lucide-react";
 import { useApp } from "../contexts/AppContext";
 import api from "../api";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Card, CardContent } from "../components/ui/card";
+
+function mapServerMessage(msg, chatId) {
+  return {
+    id: msg.id,
+    chatId,
+    senderId: msg.senderId,
+    senderName: msg.senderName,
+    text: msg.text,
+    createdAt:
+      typeof msg.createdAt === "string"
+        ? msg.createdAt
+        : new Date(msg.createdAt).toISOString(),
+  };
+}
 
 export function Chat() {
   const { userId } = useParams();
@@ -19,6 +34,7 @@ export function Chat() {
   const [loadingList, setLoadingList] = useState(false);
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef(null);
+  const socketRef = useRef(null);
   const chatId = user?.id && userId ? [user.id, userId].sort().join("-") : "";
   const bidId = searchParams.get("bidId");
   const token = typeof localStorage !== "undefined" ? localStorage.getItem("vanik_token") : null;
@@ -35,15 +51,19 @@ export function Chat() {
       setMessages(chatMessages);
     };
 
-    if (bidId) {
-      const bids = JSON.parse(localStorage.getItem("vanik_bids") || "[]");
-      const bid = bids.find((b) => b.id === bidId);
-      if (bid) {
-        setOtherUser({
-          name: bid.buyerName,
-          role: "buyer",
-        });
-      }
+    if (bidId && useApi) {
+      api
+        .get(`/api/bids/${encodeURIComponent(bidId)}`)
+        .then(({ data }) => {
+          const bid = data.bid;
+          if (!bid) return;
+          if (user.role === "farmer") {
+            setOtherUser({ name: bid.buyerName, role: "buyer" });
+          } else {
+            setOtherUser({ name: bid.farmerName, role: "farmer" });
+          }
+        })
+        .catch(() => {});
     }
 
     if (useApi) {
@@ -78,6 +98,40 @@ export function Chat() {
   }, [user, userId, chatId, bidId, useApi]);
 
   useEffect(() => {
+    if (!useApi || !bidId || !token || !user) return;
+
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    const socket = io(apiUrl, {
+      auth: { token },
+      transports: ["websocket", "polling"],
+    });
+
+    socket.on("connect", () => {
+      socket.emit("join_bid", { bidId });
+    });
+
+    socket.on("new_message", (msg) => {
+      const mapped = mapServerMessage(msg, chatId);
+      setMessages((prev) => {
+        if (prev.some((m) => m.id === mapped.id)) return prev;
+        return [...prev, mapped];
+      });
+    });
+
+    socket.on("connect_error", () => {
+      toast.error("Live chat could not connect. Messages may still send over HTTP.");
+    });
+
+    socketRef.current = socket;
+
+    return () => {
+      socket.emit("leave_bid", { bidId });
+      socket.disconnect();
+      socketRef.current = null;
+    };
+  }, [useApi, bidId, token, user, chatId]);
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -91,25 +145,33 @@ export function Chat() {
     if (!newMessage.trim()) return;
 
     if (useApi) {
+      const text = newMessage.trim();
+      const socket = socketRef.current;
+
+      if (socket?.connected) {
+        setSending(true);
+        socket.emit("chat_message", { bidId, text }, (response) => {
+          setSending(false);
+          if (response?.ok) {
+            setNewMessage("");
+          } else {
+            toast.error(response?.error || "Could not send message");
+          }
+        });
+        return;
+      }
+
       setSending(true);
       try {
         const { data } = await api.post("/api/messages", {
           bidId,
-          text: newMessage.trim(),
+          text,
         });
-        const m = data.message;
-        const mapped = {
-          id: m.id,
-          chatId,
-          senderId: m.senderId,
-          senderName: m.senderName,
-          text: m.text,
-          createdAt:
-            typeof m.createdAt === "string"
-              ? m.createdAt
-              : new Date(m.createdAt).toISOString(),
-        };
-        setMessages((prev) => [...prev, mapped]);
+        const mapped = mapServerMessage(data.message, chatId);
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === mapped.id)) return prev;
+          return [...prev, mapped];
+        });
         setNewMessage("");
       } catch (err) {
         toast.error(
