@@ -45,10 +45,18 @@ function Landing() {
             jsx("div", { className: "bg-primary/10 rounded-full p-5 sm:p-6 mb-4 sm:mb-6 flex items-center justify-center", children: jsx(Sprout, { className: "w-12 h-12 sm:w-16 sm:h-16 text-primary" }) }),
             jsx("h2", { className: "text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4 group-hover:text-primary transition-colors", children: t("landing.farmer") }),
             jsx("p", { className: "text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8", children: t("role.farmer.desc") }),
-            jsxs(Button, { size: "lg", className: "w-full h-12 sm:h-14 text-base sm:text-lg gap-2", children: [
-              t("auth.signup"),
-              jsx(ArrowRight, { className: "w-5 h-5" })
-            ] })
+            jsx(
+              Button,
+              {
+                asChild: true,
+                size: "lg",
+                className: "w-full h-12 sm:h-14 text-base sm:text-lg gap-2",
+                children: jsxs("span", { className: "inline-flex items-center gap-2", children: [
+                  t("auth.signup"),
+                  jsx(ArrowRight, { className: "w-5 h-5" })
+                ] })
+              }
+            )
           ] })
         }
       ),
@@ -61,10 +69,19 @@ function Landing() {
             jsx("div", { className: "bg-secondary/10 rounded-full p-5 sm:p-6 mb-4 sm:mb-6 flex items-center justify-center", children: jsx(ShoppingBag, { className: "w-12 h-12 sm:w-16 sm:h-16 text-secondary" }) }),
             jsx("h2", { className: "text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4 group-hover:text-secondary transition-colors", children: t("landing.buyer") }),
             jsx("p", { className: "text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8", children: t("role.buyer.desc") }),
-            jsxs(Button, { size: "lg", variant: "secondary", className: "w-full h-12 sm:h-14 text-base sm:text-lg gap-2", children: [
-              t("auth.signup"),
-              jsx(ArrowRight, { className: "w-5 h-5" })
-            ] })
+            jsx(
+              Button,
+              {
+                asChild: true,
+                size: "lg",
+                variant: "secondary",
+                className: "w-full h-12 sm:h-14 text-base sm:text-lg gap-2",
+                children: jsxs("span", { className: "inline-flex items-center gap-2", children: [
+                  t("auth.signup"),
+                  jsx(ArrowRight, { className: "w-5 h-5" })
+                ] })
+              }
+            )
           ] })
         }
       )
