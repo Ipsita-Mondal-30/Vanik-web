@@ -27,10 +27,6 @@ function Navbar() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
 
-  if (location.pathname === "/" && !user) {
-    return null;
-  }
-
   useEffect(() => {
     if (!user) return;
     api
@@ -56,6 +52,10 @@ function Navbar() {
       // ignore
     }
   };
+
+  if (location.pathname === "/" && !user) {
+    return null;
+  }
 
   return jsx("nav", { className: "bg-white border-b border-border shadow-sm sticky top-0 z-50", children: jsx("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: jsxs("div", { className: "flex justify-between items-center h-16 sm:h-20", children: [
     jsxs(Link, { to: user ? "/dashboard" : "/", className: "flex items-center gap-2 sm:gap-3", children: [
