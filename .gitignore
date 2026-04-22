@@ -6,8 +6,6 @@ dist/
 build/
 
 # Environment
-.env
-.env.*
 !.env.example
 
 # Logs & debug
@@ -22,3 +20,4 @@ pnpm-debug.log*
 
 # Vite
 *.local
+config.bat
