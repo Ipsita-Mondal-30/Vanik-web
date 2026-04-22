@@ -10,6 +10,7 @@ function normalizeBid(doc) {
   return {
     id: doc._id.toString(),
     amount: doc.amount,
+    bidUnit: doc.bidUnit || "",
     createdAt: doc.createdAt,
     status: doc.status ?? "pending",
     acceptedAt: doc.acceptedAt ?? null,
@@ -36,7 +37,7 @@ async function ensureFarmerOwnsBid(bidId, farmerId) {
 
 export async function placeBid(req, res) {
   try {
-    const { postId, amount } = req.body || {};
+    const { postId, amount, bidUnit } = req.body || {};
     if (!postId || typeof postId !== "string") {
       return res.status(400).json({ message: "postId is required" });
     }
@@ -49,10 +50,22 @@ export async function placeBid(req, res) {
       return res.status(404).json({ message: "Post not found" });
     }
 
+    const normalizedBidUnit =
+      typeof bidUnit === "string" ? bidUnit.trim().toLowerCase() : "";
+
+    if (post.isRent) {
+      if (!["hour", "day"].includes(normalizedBidUnit)) {
+        return res.status(400).json({
+          message: "Please select bid unit (hour/day) for rent posts",
+        });
+      }
+    }
+
     const bid = await Bid.create({
       postId,
       buyerId: req.user.userId,
       amount: amount.trim(),
+      bidUnit: post.isRent ? normalizedBidUnit : "",
       status: "pending",
     });
 
@@ -82,6 +95,61 @@ export async function placeBid(req, res) {
   } catch (err) {
     console.error("placeBid error:", err);
     return res.status(500).json({ message: "Could not place bid" });
+  }
+}
+
+export async function updateBid(req, res) {
+  try {
+    const { id } = req.params;
+    const { amount, bidUnit } = req.body || {};
+    if (!amount || typeof amount !== "string" || !amount.trim()) {
+      return res.status(400).json({ message: "amount is required" });
+    }
+
+    const bid = await Bid.findById(id).populate({
+      path: "postId",
+      select: "title farmerId isRent rentUnit",
+      populate: { path: "farmerId", select: "name" },
+    });
+
+    if (!bid || !bid.postId) {
+      return res.status(404).json({ message: "Bid not found" });
+    }
+
+    if (bid.buyerId.toString() !== req.user.userId) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    if (bid.status !== "pending") {
+      return res
+        .status(400)
+        .json({ message: "Only pending bids can be modified" });
+    }
+
+    const normalizedBidUnit =
+      typeof bidUnit === "string" ? bidUnit.trim().toLowerCase() : "";
+    if (bid.postId.isRent && !["hour", "day"].includes(normalizedBidUnit)) {
+      return res.status(400).json({
+        message: "Please select bid unit (hour/day) for rent posts",
+      });
+    }
+
+    bid.amount = amount.trim();
+    bid.bidUnit = bid.postId.isRent ? normalizedBidUnit : "";
+    await bid.save();
+
+    const populated = await Bid.findById(bid._id)
+      .populate("buyerId", "name")
+      .populate({
+        path: "postId",
+        select: "title farmerId",
+        populate: { path: "farmerId", select: "name" },
+      });
+
+    return res.json({ bid: normalizeBid(populated) });
+  } catch (err) {
+    console.error("updateBid error:", err);
+    return res.status(500).json({ message: "Could not update bid" });
   }
 }
 

@@ -7,6 +7,8 @@ function normalizePost(doc) {
     title: doc.title,
     description: doc.description,
     price: doc.price || "",
+    isRent: Boolean(doc.isRent),
+    rentUnit: doc.rentUnit || "",
     farmerId: farmer ? farmer._id.toString() : doc.farmerId.toString(),
     farmerName: farmer?.name ?? "Farmer",
     createdAt: doc.createdAt,
@@ -41,18 +43,29 @@ export async function getPost(req, res) {
 
 export async function createPost(req, res) {
   try {
-    const { title, description, price } = req.body || {};
+    const { title, description, price, isRent, rentUnit } = req.body || {};
     if (!title || typeof title !== "string" || !title.trim()) {
       return res.status(400).json({ message: "Title is required" });
     }
     if (!description || typeof description !== "string" || !description.trim()) {
       return res.status(400).json({ message: "Description is required" });
     }
+    const normalizedIsRent = Boolean(isRent);
+    const normalizedRentUnit =
+      typeof rentUnit === "string" ? rentUnit.trim().toLowerCase() : "";
+
+    if (normalizedIsRent && !["hour", "day"].includes(normalizedRentUnit)) {
+      return res
+        .status(400)
+        .json({ message: "Rent posts must select hour or day pricing" });
+    }
 
     const post = await Post.create({
       title: title.trim(),
       description: description.trim(),
       price: typeof price === "string" ? price.trim() : String(price ?? "").trim(),
+      isRent: normalizedIsRent,
+      rentUnit: normalizedIsRent ? normalizedRentUnit : "",
       farmerId: req.user.userId,
     });
 

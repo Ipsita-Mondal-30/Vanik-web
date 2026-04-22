@@ -6,6 +6,13 @@ import api from "../api";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { ArrowLeft, IndianRupee, PlusCircle, ClipboardList, FileText, Loader2 } from "lucide-react";
+function getPriceText(post) {
+  if (!post?.price) return null;
+  if (post.isRent) {
+    return `${post.price}/${post.rentUnit === "hour" ? "hour" : "day"}`;
+  }
+  return post.price;
+}
 function MyPosts() {
   const navigate = useNavigate();
   const { user, t } = useApp();
@@ -83,6 +90,7 @@ function MyPosts() {
       ] })
     ] }) }) : jsx("div", { className: "grid gap-4 sm:gap-6", children: posts.map((post) => {
       const bidCount = bidCountByPostId[post.id] || 0;
+      const priceText = getPriceText(post);
       return jsx(
         Card,
         {
@@ -95,9 +103,9 @@ function MyPosts() {
                 jsx("p", { className: "text-sm sm:text-base text-muted-foreground line-clamp-2 mb-3", children: post.description }),
                 jsx("div", { className: "flex items-center gap-2 text-xs sm:text-sm text-muted-foreground", children: jsx("span", { children: new Date(post.createdAt).toLocaleDateString() }) })
               ] }),
-              post.price && jsx("div", { className: "bg-primary/10 rounded-xl p-3 text-center shrink-0", children: jsxs("div", { className: "flex items-center justify-center gap-1 text-xl font-bold text-primary", children: [
+              priceText && jsx("div", { className: "bg-primary/10 rounded-xl p-3 text-center shrink-0", children: jsxs("div", { className: "flex items-center justify-center gap-1 text-xl font-bold text-primary", children: [
                 jsx(IndianRupee, { className: "w-5 h-5" }),
-                post.price
+                priceText
               ] }) })
             ] }),
             jsxs("div", { className: "flex items-center gap-3", children: [

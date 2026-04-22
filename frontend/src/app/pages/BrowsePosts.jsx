@@ -6,6 +6,20 @@ import api from "../api";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { ArrowLeft, IndianRupee, ShoppingCart, Mail, Sprout, ArrowRight, Loader2 } from "lucide-react";
+function getPriceMeta(post) {
+  if (!post?.price) return null;
+  if (post.isRent) {
+    const unit = post.rentUnit === "hour" ? "hour" : "day";
+    return {
+      value: `${post.price}/${unit}`,
+      label: "Rent"
+    };
+  }
+  return {
+    value: post.price,
+    label: "Starting"
+  };
+}
 function BrowsePosts() {
   const navigate = useNavigate();
   const { user, t } = useApp();
@@ -49,41 +63,44 @@ function BrowsePosts() {
       jsx("div", { className: "flex justify-center mb-4", children: jsx(Mail, { className: "w-14 h-14 sm:w-16 sm:h-16 text-muted-foreground" }) }),
       jsx("h3", { className: "text-lg sm:text-xl font-semibold mb-2", children: t("post.noPosts") }),
       jsx("p", { className: "text-sm sm:text-base text-muted-foreground", children: "Check back later for new posts" })
-    ] }) }) : jsx("div", { className: "grid gap-4 sm:gap-6", children: posts.map((post) => jsx(
-      Card,
-      {
-        className: "cursor-pointer hover:shadow-xl transition-all hover:-translate-y-1",
-        onClick: () => navigate(`/post/${post.id}`),
-        children: jsxs(CardContent, { className: "p-5 sm:p-6", children: [
-          jsxs("div", { className: "flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-3 sm:mb-4", children: [
-            jsxs("div", { className: "flex-1", children: [
-              jsx("h3", { className: "text-lg sm:text-xl font-bold mb-2", children: post.title }),
-              jsx("p", { className: "text-sm sm:text-base text-muted-foreground line-clamp-2 mb-3", children: post.description }),
-              jsxs("div", { className: "flex items-center gap-2 text-xs sm:text-sm text-muted-foreground", children: [
-                jsxs("span", { className: "bg-muted px-2 py-1 rounded inline-flex items-center gap-1.5", children: [
-                  jsx(Sprout, { className: "w-3.5 h-3.5 shrink-0" }),
-                  post.farmerName
+    ] }) }) : jsx("div", { className: "grid gap-4 sm:gap-6", children: posts.map((post) => {
+      const priceMeta = getPriceMeta(post);
+      return jsx(
+        Card,
+        {
+          className: "cursor-pointer hover:shadow-xl transition-all hover:-translate-y-1",
+          onClick: () => navigate(`/post/${post.id}`),
+          children: jsxs(CardContent, { className: "p-5 sm:p-6", children: [
+            jsxs("div", { className: "flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-3 sm:mb-4", children: [
+              jsxs("div", { className: "flex-1", children: [
+                jsx("h3", { className: "text-lg sm:text-xl font-bold mb-2", children: post.title }),
+                jsx("p", { className: "text-sm sm:text-base text-muted-foreground line-clamp-2 mb-3", children: post.description }),
+                jsxs("div", { className: "flex items-center gap-2 text-xs sm:text-sm text-muted-foreground", children: [
+                  jsxs("span", { className: "bg-muted px-2 py-1 rounded inline-flex items-center gap-1.5", children: [
+                    jsx(Sprout, { className: "w-3.5 h-3.5 shrink-0" }),
+                    post.farmerName
+                  ] }),
+                  jsx("span", { children: "\u2022" }),
+                  jsx("span", { children: new Date(post.createdAt).toLocaleDateString() })
+                ] })
+              ] }),
+              priceMeta && jsxs("div", { className: "bg-primary/10 rounded-xl p-3 sm:p-4 text-center shrink-0", children: [
+                jsxs("div", { className: "flex items-center justify-center gap-1 text-xl sm:text-2xl font-bold text-primary", children: [
+                  jsx(IndianRupee, { className: "w-5 h-5 sm:w-6 sm:h-6" }),
+                  priceMeta.value
                 ] }),
-                jsx("span", { children: "\u2022" }),
-                jsx("span", { children: new Date(post.createdAt).toLocaleDateString() })
+                jsx("div", { className: "text-xs sm:text-sm text-muted-foreground mt-1", children: priceMeta.label })
               ] })
             ] }),
-            post.price && jsxs("div", { className: "bg-primary/10 rounded-xl p-3 sm:p-4 text-center shrink-0", children: [
-              jsxs("div", { className: "flex items-center justify-center gap-1 text-xl sm:text-2xl font-bold text-primary", children: [
-                jsx(IndianRupee, { className: "w-5 h-5 sm:w-6 sm:h-6" }),
-                post.price
-              ] }),
-              jsx("div", { className: "text-xs sm:text-sm text-muted-foreground mt-1", children: "Starting" })
+            jsxs(Button, { size: "sm", className: "w-full sm:w-auto gap-2", children: [
+              t("post.viewDetails"),
+              jsx(ArrowRight, { className: "w-4 h-4" })
             ] })
-          ] }),
-          jsxs(Button, { size: "sm", className: "w-full sm:w-auto gap-2", children: [
-            t("post.viewDetails"),
-            jsx(ArrowRight, { className: "w-4 h-4" })
           ] })
-        ] })
-      },
-      post.id
-    )) })
+        },
+        post.id
+      );
+    }) })
   ] }) });
 }
 export {
