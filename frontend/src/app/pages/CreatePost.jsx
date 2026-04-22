@@ -8,6 +8,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
+import { Checkbox } from "../components/ui/checkbox";
 import { Card, CardContent } from "../components/ui/card";
 import { ArrowLeft, FileText, Loader2 } from "lucide-react";
 function CreatePost() {
@@ -16,7 +17,9 @@ function CreatePost() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    price: ""
+    price: "",
+    isRent: false,
+    rentUnit: "day"
   });
   const [loading, setLoading] = useState(false);
   if (!user || user.role !== "farmer") {
@@ -33,7 +36,9 @@ function CreatePost() {
       await api.post("/api/posts", {
         title: formData.title,
         description: formData.description,
-        price: formData.price
+        price: formData.price,
+        isRent: formData.isRent,
+        rentUnit: formData.isRent ? formData.rentUnit : ""
       });
       toast.success("Post created");
       navigate("/my-posts");
@@ -104,8 +109,8 @@ function CreatePost() {
         ] }),
         jsxs("div", { className: "space-y-2", children: [
           jsxs(Label, { htmlFor: "price", className: "text-base sm:text-lg", children: [
-            t("post.price"),
-            " (\u20B9) - Optional"
+            formData.isRent ? "Rent Price (\u20B9)" : `${t("post.price")} (\u20B9)`,
+            " - Optional"
           ] }),
           jsx(
             Input,
@@ -118,7 +123,33 @@ function CreatePost() {
               className: "h-12 sm:h-14 text-base sm:text-lg"
             }
           ),
-          jsx("p", { className: "text-xs sm:text-sm text-muted-foreground", children: "Leave empty if you want buyers to bid" })
+          jsx("p", { className: "text-xs sm:text-sm text-muted-foreground", children: formData.isRent ? "Set your rent amount per selected unit." : "Leave empty if you want buyers to bid." })
+        ] }),
+        jsxs("div", { className: "space-y-3", children: [
+          jsxs("div", { className: "flex items-center gap-3", children: [
+            jsx(
+              Checkbox,
+              {
+                id: "isRent",
+                checked: formData.isRent,
+                onCheckedChange: (checked) => setFormData({ ...formData, isRent: Boolean(checked) })
+              }
+            ),
+            jsx(Label, { htmlFor: "isRent", className: "text-base sm:text-lg cursor-pointer", children: "For Rent" })
+          ] }),
+          formData.isRent && jsxs("div", { className: "space-y-2", children: [
+            jsx(Label, { className: "text-sm sm:text-base", children: "Price unit" }),
+            jsxs("div", { className: "flex items-center gap-6", children: [
+              jsxs(Label, { className: "flex items-center gap-2 cursor-pointer text-sm sm:text-base", children: [
+                jsx("input", { type: "radio", name: "rentUnit", value: "hour", checked: formData.rentUnit === "hour", onChange: (e) => setFormData({ ...formData, rentUnit: e.target.value }) }),
+                "Per hour"
+              ] }),
+              jsxs(Label, { className: "flex items-center gap-2 cursor-pointer text-sm sm:text-base", children: [
+                jsx("input", { type: "radio", name: "rentUnit", value: "day", checked: formData.rentUnit === "day", onChange: (e) => setFormData({ ...formData, rentUnit: e.target.value }) }),
+                "Per day"
+              ] })
+            ] })
+          ] })
         ] }),
         jsx(
           Button,

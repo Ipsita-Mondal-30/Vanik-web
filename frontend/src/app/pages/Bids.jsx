@@ -7,6 +7,13 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { ArrowLeft, IndianRupee, MessageSquare, Target, Mail, User, Loader2, Check, X } from "lucide-react";
 import { toast } from "sonner";
+function formatBidAmount(bid) {
+  if (!bid?.amount) return "";
+  if (bid.bidUnit === "hour" || bid.bidUnit === "day") {
+    return `${bid.amount}/${bid.bidUnit}`;
+  }
+  return bid.amount;
+}
 function Bids() {
   const navigate = useNavigate();
   const { user, t } = useApp();
@@ -82,7 +89,7 @@ function Bids() {
           jsx("div", { className: "text-xs text-muted-foreground mb-1", children: t("bid.bidAmount") }),
           jsxs("div", { className: "flex items-center justify-center gap-1 text-xl sm:text-2xl font-bold text-accent", children: [
             jsx(IndianRupee, { className: "w-5 h-5" }),
-            bid.amount
+            formatBidAmount(bid)
           ] })
         ] }),
         bid.status === "pending" ? jsxs("div", { className: "flex gap-2", children: [

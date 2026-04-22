@@ -9,19 +9,39 @@ import { Label } from "../components/ui/label";
 import { Card, CardContent } from "../components/ui/card";
 import { ArrowLeft, IndianRupee, User, Mail, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+function getPostPriceMeta(post) {
+  if (!post?.price) return null;
+  if (post.isRent) {
+    return {
+      heading: "Rent Price",
+      value: `${post.price}/${post.rentUnit === "hour" ? "hour" : "day"}`
+    };
+  }
+  return {
+    heading: "Starting Price",
+    value: post.price
+  };
+}
 function PostDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, t } = useApp();
   const [post, setPost] = useState(null);
   const [bidAmount, setBidAmount] = useState("");
+  const [bidUnit, setBidUnit] = useState("day");
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (id) {
       setLoading(true);
       api
         .get(`/api/posts/${id}`)
-        .then(({ data }) => setPost(data.post || null))
+        .then(({ data }) => {
+          const postData = data.post || null;
+          setPost(postData);
+          if (postData?.isRent) {
+            setBidUnit(postData.rentUnit === "hour" ? "hour" : "day");
+          }
+        })
         .catch(() => setPost(null))
         .finally(() => setLoading(false));
     }
@@ -45,10 +65,15 @@ function PostDetails() {
       toast.error("Please enter a valid bid amount");
       return;
     }
+    if (post.isRent && !["hour", "day"].includes(bidUnit)) {
+      toast.error("Please select per hour or per day");
+      return;
+    }
     try {
       await api.post("/api/bids", {
         postId: post.id,
-        amount: bidAmount
+        amount: bidAmount,
+        bidUnit: post.isRent ? bidUnit : ""
       });
       toast.success("Bid placed successfully!");
       setBidAmount("");
@@ -58,6 +83,7 @@ function PostDetails() {
   };
   const isFarmer = user.role === "farmer";
   const isOwnPost = post.farmerId === user.id;
+  const priceMeta = getPostPriceMeta(post);
   return jsx("div", { className: "min-h-[calc(100vh-5rem)] bg-gradient-to-b from-background to-muted/30 py-8 sm:py-12 px-4", children: jsxs("div", { className: "max-w-3xl mx-auto", children: [
     jsxs(
       Button,
@@ -83,11 +109,11 @@ function PostDetails() {
             jsx("span", { children: new Date(post.createdAt).toLocaleDateString() })
           ] })
         ] }),
-        post.price && jsxs("div", { className: "bg-primary/10 rounded-xl p-4 text-center shrink-0", children: [
-          jsx("div", { className: "text-xs sm:text-sm text-muted-foreground mb-1", children: "Starting Price" }),
+        priceMeta && jsxs("div", { className: "bg-primary/10 rounded-xl p-4 text-center shrink-0", children: [
+          jsx("div", { className: "text-xs sm:text-sm text-muted-foreground mb-1", children: priceMeta.heading }),
           jsxs("div", { className: "flex items-center justify-center gap-1 text-2xl sm:text-3xl font-bold text-primary", children: [
             jsx(IndianRupee, { className: "w-6 h-6" }),
-            post.price
+            priceMeta.value
           ] })
         ] })
       ] }),
@@ -125,6 +151,19 @@ function PostDetails() {
               children: t("bid.place")
             }
           )
+        ] }),
+        post.isRent && jsxs("div", { className: "pt-1", children: [
+          jsx("p", { className: "text-xs sm:text-sm text-muted-foreground mb-2", children: "Select bid unit" }),
+          jsxs("div", { className: "flex items-center gap-6", children: [
+            jsxs(Label, { className: "flex items-center gap-2 cursor-pointer text-sm sm:text-base", children: [
+              jsx("input", { type: "radio", name: "bidUnit", value: "hour", checked: bidUnit === "hour", onChange: (e) => setBidUnit(e.target.value) }),
+              "Per hour"
+            ] }),
+            jsxs(Label, { className: "flex items-center gap-2 cursor-pointer text-sm sm:text-base", children: [
+              jsx("input", { type: "radio", name: "bidUnit", value: "day", checked: bidUnit === "day", onChange: (e) => setBidUnit(e.target.value) }),
+              "Per day"
+            ] })
+          ] })
         ] })
       ] }) })
     ] }) }),
