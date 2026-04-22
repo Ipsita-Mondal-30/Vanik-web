@@ -11,7 +11,6 @@ import {
   ShoppingBag,
   ArrowRight,
 } from "lucide-react";
-import { FarmingIllustration } from "../components/FarmingIllustration";
 function Landing() {
   const navigate = useNavigate();
   const { t, language, setLanguage } = useApp();
@@ -30,10 +29,23 @@ function Landing() {
       }
     ) }),
     jsxs("div", { className: "text-center mb-8 sm:mb-12", children: [
-      jsx("div", { className: "mb-6 sm:mb-8", children: jsx(FarmingIllustration, {}) }),
-      jsx("h1", { className: "text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6", children: "Vanik" }),
-      jsx("p", { className: "text-xl sm:text-2xl lg:text-3xl text-foreground/80 mb-3 sm:mb-4 px-4", children: t("landing.tagline") }),
-      jsx("p", { className: "text-base sm:text-lg text-muted-foreground", children: t("landing.subtitle") })
+      jsx("span", { className: "inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary mb-4 sm:mb-6", children: "Trusted marketplace for farmers and buyers" }),
+      jsxs("h1", { className: "text-3xl sm:text-4xl lg:text-6xl font-bold tracking-tight text-foreground mb-4 sm:mb-6 px-2", children: [
+        "Grow together with ",
+        jsx("span", { className: "text-primary", children: "Vanik" })
+      ] }),
+      jsx("p", { className: "text-lg sm:text-xl lg:text-2xl text-foreground/80 mb-3 sm:mb-4 px-4 max-w-3xl mx-auto", children: t("landing.tagline") }),
+      jsx("p", { className: "text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-8", children: t("landing.subtitle") }),
+      jsxs("div", { className: "flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4", children: [
+        jsxs(Button, { size: "lg", className: "w-full sm:w-auto min-w-48", onClick: () => navigate("/signup?role=farmer"), children: [
+          jsx(Sprout, { className: "w-5 h-5 mr-2" }),
+          t("landing.farmer")
+        ] }),
+        jsxs(Button, { size: "lg", variant: "secondary", className: "w-full sm:w-auto min-w-48", onClick: () => navigate("/signup?role=buyer"), children: [
+          jsx(ShoppingBag, { className: "w-5 h-5 mr-2" }),
+          t("landing.buyer")
+        ] })
+      ] })
     ] }),
     jsxs("div", { className: "grid md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto mb-12 sm:mb-16", children: [
       jsx(
