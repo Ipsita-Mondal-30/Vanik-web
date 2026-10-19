@@ -5,9 +5,9 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node api.js && node server.js",
-    "dev": "node api.js && node --watch server.js",
-    "build": "npm run dev"
+    "start": "node init && node server.js",
+    "dev": "node init && node --watch server.js",
+    "build": "node init && npm run dev"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
