@@ -6,6 +6,8 @@ dist/
 build/
 
 # Environment
+.env
+.env.*
 !.env.example
 
 # Logs & debug
@@ -16,7 +18,7 @@ pnpm-debug.log*
 # OS & editor
 .DS_Store
 .idea/
+.vscode/
 
 # Vite
 *.local
-config.bat
